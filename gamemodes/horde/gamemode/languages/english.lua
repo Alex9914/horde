@@ -1334,7 +1334,7 @@ LANGUAGE["Item_Desc_Advanced Kevlar Armor"] = [[
 Distinguished Survivor armor.
 
 Fills up 100% of your armor bar.
-Provides 5% increased damage resistance.
+Provides 5% Global damage resistance.
 ]]
 
 LANGUAGE["Item_Assault Vest"] = [[Assault Vest]]
@@ -1374,7 +1374,7 @@ LANGUAGE["Item_Desc_Assassin's Cloak"] = [[
 Distinguished Ghost armor.
 
 Fills up 100% of your armor bar.
-Provides 5% increased evasion.
+Provides 5% increased Evasion.
 ]]
 
 LANGUAGE["Item_Defense Matrix"] = [[Defense Matrix]]
@@ -1382,7 +1382,7 @@ LANGUAGE["Item_Desc_Defense Matrix"] = [[
 Distinguished Engineer armor.
 
 Fills up 100% of your armor bar.
-Provides 5% increased damage resistance.
+Provides 5% increased Global damage resistance.
 ]]
 
 LANGUAGE["Item_Riot Armor"] = [[Riot Armor]]
