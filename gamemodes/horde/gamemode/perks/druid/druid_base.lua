@@ -3,23 +3,12 @@ PERK.Description = [[
 The Old Gods have chosen their champion to help rid the world of the undead.
 Scourge channel their blessings and the forces of nature to assist your fellow warriors in battle.]]
 PERK.Icon = "materials/subclasses/druid.png"
-PERK.Params = {
-    [1] = { percent = true, base = 0.25, level = 0.02, max = 0.75, classname = "Carcass" },
-    [2] = { value = 0.25, percent = true },
-    [3] = { value = 0.02, percent = true },
-    [4] = { value = 0.75, percent = true },
-    [5] = { value = 0.5, percent = true },
-    [6] = { value = 0.75, percent = true },
-    [7] = { value = 0.05, percent = true },
-    [8] = { value = 0.02, percent = true },
-}
+PERK.Params = {}
 PERK.Hooks = {}
 
 PERK.Hooks.Horde_OnSetPerk = function( ply, perk )
     if not SERVER then return end
     if perk ~= "druid_base" then return end
-
-    print("Testing")
 
     ply:Horde_SetMindRegenTick( 0.25 )
     ply:SetMaxArmor( 0 )
