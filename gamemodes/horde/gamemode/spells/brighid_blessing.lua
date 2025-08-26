@@ -4,9 +4,9 @@ SPELL.Mind            = { 20, 30, 40 }
 SPELL.Price           = 1500
 SPELL.ChargeTime      = { 0.5, 1, 1.5 }
 SPELL.ChargeRelease   = nil
-SPELL.Cooldown        = 1
+SPELL.Cooldown        = 10
 SPELL.Slot            = HORDE.Spell_Slot_LMB
-SPELL.DamageType      = { HORDE.DMG_COLD }
+SPELL.DamageType      = { HORDE.DMG_POISON }
 SPELL.Icon            = "spells/brighid_blessing.png"
 SPELL.Type            = { HORDE.Spell_Type_AOE }
 SPELL.Description     = [[Heals 5 hp, increases healing by 5 per charge]]
@@ -40,4 +40,3 @@ SPELL.Fire            = function( ply, wpn, charge_stage )
         end
     end
 end
-SPELL.Price = 750
