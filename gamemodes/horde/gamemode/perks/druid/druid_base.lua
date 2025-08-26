@@ -44,7 +44,7 @@ PERK.Hooks.Horde_OnSetPerk = function( ply, perk )
         end
 
         if not utilitySpell or ( utilSpellWep ~= nil and not table.HasValue( utilSpellWep, spellWep ) ) then
-            ply:Horde_SetSpell( "winds_of_taranis" )
+            ply:Horde_SetSpell( "the_morrigan_favour" )
         end
 
         if ultimateSpell and ( ultSpellWep ~= nil and not table.HasValue( ultSpellWep, spellWep ) ) then
