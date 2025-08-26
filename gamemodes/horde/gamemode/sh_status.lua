@@ -62,6 +62,8 @@ HORDE:RegisterStatus("Hypertrophy", "materials/status/hypertrophy.png", true)
 HORDE:RegisterStatus("SolarFlux", "materials/perks/artificer/solar_flux.png", true)
 HORDE:RegisterStatus("Bio_Thruster", "materials/perks/carcass/bio_thruster.png", true)
 HORDE:RegisterStatus("Twin_Heart", "materials/perks/carcass/twin_heart.png", true)
+-- Druid
+HORDE:RegisterStatus("Winds_of_Taranis", "materials/status/winds_of_taranis.png")
 
 HORDE:RegisterStatus("Fortify", "materials/perks/fortify.png")
 HORDE:RegisterStatus("Berserk", "materials/perks/berserk.png")
