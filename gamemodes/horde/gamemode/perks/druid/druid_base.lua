@@ -43,7 +43,7 @@ PERK.Hooks.Horde_OnSetPerk = function( ply, perk )
             ply:Horde_SetSpell( "solar_bolt" )
         end
 
-        if utilitySpell or ( utilSpellWep ~= nil and not table.HasValue( utilSpellWep, spellWep ) ) then
+        if not utilitySpell or ( utilSpellWep ~= nil and not table.HasValue( utilSpellWep, spellWep ) ) then
             ply:Horde_SetSpell( "illuminate" )
         end
 
