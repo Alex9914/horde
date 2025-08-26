@@ -36,11 +36,11 @@ PERK.Hooks.Horde_OnSetPerk = function( ply, perk )
         local ultSpellWep = ultimateSpell and ultimateSpell.Weapon
 
         if not primarySpell or ( prmySpellWep ~= nil and not table.HasValue( prmySpellWep, spellWep ) ) then
-            ply:Horde_SetSpell( "brighid_blessing" )
+            ply:Horde_SetSpell( "eostre_glove" )
         end
 
         if not secondarySpell or ( secSpellWep ~= nil and not table.HasValue( secSpellWep, spellWep ) ) then
-            ply:Horde_SetSpell( "raise_spectre" )
+            ply:Horde_SetSpell( "solar_bolt" )
         end
 
         if utilitySpell or ( utilSpellWep ~= nil and not table.HasValue( utilSpellWep, spellWep ) ) then
