@@ -35,6 +35,8 @@ ENT.SoundTbl_MeleeAttackMiss = {"zsszombie/miss1.wav","zsszombie/miss2.wav","zss
 ENT.SoundTbl_Pain = {"zsszombies/zmisc_pain1.wav","zsszombies/zmisc_pain2.wav","zsszombies/zmisc_pain3.wav","zsszombies/zmisc_pain4.wav","zsszombies/zmisc_pain5.wav","zsszombies/zmisc_pain6.wav"}
 ENT.SoundTbl_Death = {"zsszombies/zmisc_die1.wav","zsszombies/zmisc_die2.wav","zsszombies/zmisc_die3.wav"}
 
+local CurTime = CurTime -- optimization
+
 ENT.FootStepSoundLevel = 55
 ENT.NextBlastTime = CurTime()
 ENT.NextBlastCooldown = 8
@@ -89,23 +91,28 @@ end
 
 function ENT:CustomOnThink()
 	if not self:GetEnemy() then return end
+
 	local EnemyDistance = self.NearestPointToEnemyDistance
-	if EnemyDistance < 250 then
-		if CurTime() > self.NextBlastTime then
-			sound.Play("npc/stalker/go_alert2.wav", self:GetPos())
-			self:VJ_ACT_PLAYACTIVITY("podconvulse", true, 1.5, false)
-			self:ShockAttack(1.5)
-			self:ShockAttack(1.7)
-			self:ShockAttack(1.9)
-			self:ShockAttack(2.1)
-			self:ShockAttack(2.3)
-			self.NextBlastTime = CurTime() + self.NextBlastCooldown
-			timer.Simple(2.5, function ()
-				if not self:IsValid() then return end
-				self:VJ_ACT_PLAYACTIVITY("walk")
-			end)
-		end
-	end
+	if EnemyDistance >= 250 then return end
+
+	local curTime = CurTime()
+	if curTime <= self.NextBlastTime then return end
+
+	sound.Play("npc/stalker/go_alert2.wav", self:GetPos())
+	self:VJ_ACT_PLAYACTIVITY("podconvulse", true, 1.5, false)
+
+	self:ShockAttack(1.5)
+	self:ShockAttack(1.7)
+	self:ShockAttack(1.9)
+	self:ShockAttack(2.1)
+	self:ShockAttack(2.3)
+
+	self.NextBlastTime = curTime + self.NextBlastCooldown
+
+	timer.Simple(2.5, function ()
+		if not self:IsValid() then return end
+		self:VJ_ACT_PLAYACTIVITY("walk")
+	end)
 end
 
 VJ.AddNPC("Screecher","npc_vj_horde_screecher", "Zombies")
