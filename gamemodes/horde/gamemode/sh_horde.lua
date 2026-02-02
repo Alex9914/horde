@@ -33,7 +33,7 @@ CreateConVar("horde_disable_difficulty_voting", 0, nil, "Disable difficulty voti
 CreateConVar("horde_endless", 0, FCVAR_ARCHIVE, "Endless.")
 CreateConVar("horde_total_enemies_scaling", 0, nil, "Forces the gamemode to multiply maximum enemy count by this.")
 
-CreateConVar("horde_perk_start_wave", 1, FCVAR_REPLICATED, "The wave when Tier 1 perks are active.")
+CreateConVar("horde_perk_start_wave", 0, FCVAR_REPLICATED, "The wave when Tier 1 perks are active.")
 CreateConVar("horde_perk_scaling", 2, FCVAR_REPLICATED, "The multiplier to the level for which wave it is unlocked. e.g. at 1.5, perk level 4 is unlocked at start_wave + 6.", 0)
 
 CreateConVar("horde_enable_starter", 1, FCVAR_ARCHIVE + FCVAR_REPLICATED, "Enables starter weapons.")
@@ -51,7 +51,8 @@ CreateConVar("horde_enable_3d2d_icon", 1, nil, "Enables player icon renders.")
 
 CreateConVar("horde_testing_unlimited_class_change", 0, nil, "You can change a class for an unlimited times. Please use this only for testing purposes.")
 CreateConVar("horde_testing_display_damage", 0, FCVAR_ARCHIVE, "Display damage for testing.")
-CreateConVar("horde_display_damage", 1, FCVAR_ARCHIVE, "Display damage.")
+CreateConVar("horde_enable_damage_numbers", 1, FCVAR_ARCHIVE, "Enables damage numbers.")
+CreateConVar("horde_enable_debuff_text", 1, FCVAR_ARCHIVE, "Enables displaying debuffs done to enemies.")
 CreateConVar("horde_enable_health_gui", 1, FCVAR_ARCHIVE, "Enables health UI.")
 CreateConVar("horde_enable_ammo_gui", 1, FCVAR_ARCHIVE, "Enables ammo UI.")
 
