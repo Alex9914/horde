@@ -773,9 +773,12 @@ function SWEP:PrimaryAttack()
 
 		if IsValid(ply) and IsValid(Trace.Entity) then
 			if HORDE:IsPlayerMinion(Trace.Entity) then
-				Trace.Entity:SetHealth(math.min(Trace.Entity:GetMaxHealth(), Trace.Entity:Health() + 0.01 * Trace.Entity:GetMaxHealth()))
-			elseif Trace.Entity:IsPlayer() then
-			else
+				if Trace.Entity:GetClass() == "horde_unwelded_turret" then
+					Trace.Entity:Repair(1)
+				else
+					Trace.Entity:SetHealth(math.min(Trace.Entity:GetMaxHealth(), Trace.Entity:Health() + 0.01 * Trace.Entity:GetMaxHealth()))
+				end
+			elseif not Trace.Entity:IsPlayer() then
 				if StuffToFixTable[Trace.Entity:GetClass()] or exceptionContinue(Trace.Entity) != false then
 					if ply:GetPos():Distance(Trace.Entity:GetPos()) > 300 then
 					else
@@ -809,7 +812,7 @@ function SWEP:PrimaryAttack()
 				else
 				end
 			end
-			end
+		end
 	end
 	self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
 

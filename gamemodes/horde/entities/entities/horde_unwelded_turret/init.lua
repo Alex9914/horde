@@ -16,24 +16,24 @@ end
 
 
 function ENT:Repair( amount )
-    self.RepairProgress = math.min( self.RepairProgress + amount, 1.05 )
+    self.RepairProgress = math.min( self.RepairProgress + amount, 100 )
 
     net.Start( "WireframeRepair_UpdateProgress" )
         net.WriteEntity( self )
         net.WriteFloat( self.RepairProgress )
     net.Broadcast()
 
-    if self.RepairProgress > 1 then
+    if self.RepairProgress >= 100 then
         self:Remove()
     end
 end
 
 function ENT:Use()
-    self:Repair( 0.01 )
+    self:Repair( 0.5 )
 end
 
 function ENT:OnRemove()
-    if self.RepairProgress < 1 then return end
+    if self.RepairProgress < 100 then return end
 
     local owner = self:GetOwner()
 
