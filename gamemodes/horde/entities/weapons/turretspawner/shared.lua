@@ -95,7 +95,9 @@ function SWEP:PrimaryAttack()
     ent:SetOwner( owner )
     ent:Spawn()
 
-    ent:SetCollisionGroup( 5 )
+    ent:SetCollisionGroup( 0 )
+    ent:SetSolid( SOLID_NONE )
+    ent:SetSolidFlags( FSOLID_TRIGGER )
 end
 
 if not CLIENT then return end

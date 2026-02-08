@@ -215,4 +215,16 @@ function ENT:Follow( ply )
     self:GetPhysicsObject():EnableMotion( true )
 end
 
+function ENT:OnRemove()
+    local ent = ents.Create( "horde_unwelded_turret" )
+    ent:SetPos( self:GetPos() )
+    ent:SetAngles( self:GetAngles() )
+    ent:SetOwner( self:GetOwner() )
+    ent:Spawn()
+
+    ent:SetCollisionGroup( 0 )
+    ent:SetSolid( SOLID_NONE )
+    ent:SetSolidFlags( FSOLID_TRIGGER )
+end
+
 VJ.AddNPC( "SMG Turret", "npc_vj_horde_smg_turret", "Horde" )
