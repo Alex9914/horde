@@ -94,8 +94,6 @@ function ENT:CustomOnInitialize()
     self:SetCollisionGroup( COLLISION_GROUP_WORLD )
 
     timer.Simple( 0, function ()
-        HORDE:DropTurret( self )
-
         if self.Horde_Is_Mini_Sentry then
             self:SetMaxHealth(200)
             self:SetHealth(200)
@@ -207,12 +205,6 @@ ENT.Horde_TurretMinion = true
 
 function ENT:Follow( ply )
     if self:GetNWEntity( "HordeOwner" ) ~= ply then return end
-
-    local a = self:GetAngles()
-    self:SetAngles( Angle( 0, a.y, 0 ) )
-
-    ply:PickupObject( self )
-    self:GetPhysicsObject():EnableMotion( true )
 end
 
 function ENT:OnRemove()
