@@ -33,6 +33,8 @@ function ENT:Use()
 end
 
 function ENT:OnRemove()
+    if self.RepairProgress < 1 then return end
+
     local ent = ents.Create( "npc_vj_horde_smg_turret" )
     ent:SetPos( self:GetPos() )
     ent:SetAngles( self:GetAngles() )
