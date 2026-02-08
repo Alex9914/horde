@@ -17,6 +17,7 @@ end
 
 function SWEP:OnRemove()
     self:RemoveGhostModel()
+    LocalPlayer():ConCommand( "lastinv" )
 end
 
 function SWEP:Think()

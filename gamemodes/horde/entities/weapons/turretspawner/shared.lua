@@ -99,6 +99,8 @@ function SWEP:PrimaryAttack()
     ent:SetCollisionGroup( 0 )
     ent:SetSolid( SOLID_NONE )
     ent:SetSolidFlags( FSOLID_TRIGGER )
+
+    self:Remove()
 end
 
 if not CLIENT then return end
