@@ -216,12 +216,15 @@ function ENT:Follow( ply )
 end
 
 function ENT:OnRemove()
+    local owner = self:GetOwner()
+
     local ent = ents.Create( "horde_unwelded_turret" )
     ent:SetPos( self:GetPos() )
     ent:SetAngles( self:GetAngles() )
-    ent:SetOwner( self:GetOwner() )
+    ent:SetOwner( owner )
     ent:Spawn()
 
+    ent:SetNWEntity( "HordeOwner", owner )
     ent:SetCollisionGroup( 0 )
     ent:SetSolid( SOLID_NONE )
     ent:SetSolidFlags( FSOLID_TRIGGER )

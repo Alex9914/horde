@@ -35,11 +35,14 @@ end
 function ENT:OnRemove()
     if self.RepairProgress < 1 then return end
 
+    local owner = self:GetOwner()
+
     local ent = ents.Create( "npc_vj_horde_smg_turret" )
     ent:SetPos( self:GetPos() )
     ent:SetAngles( self:GetAngles() )
-    ent:SetOwner( self:GetOwner() )
+    ent:SetOwner( owner )
     ent:Spawn()
 
+    ent:SetNWEntity( "HordeOwner", owner )
     ent:SetCollisionGroup( 5 )
 end
