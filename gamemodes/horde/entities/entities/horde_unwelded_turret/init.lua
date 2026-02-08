@@ -29,7 +29,7 @@ function ENT:Repair( amount )
 end
 
 function ENT:Use()
-    self:Repair( 0.5 )
+    self:Repair( 5 )
 end
 
 function ENT:OnRemove()
