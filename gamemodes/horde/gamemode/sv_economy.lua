@@ -573,6 +573,7 @@ net.Receive("Horde_BuyItem", function (len, ply)
                 ent:SetAngles(Angle(0, ply:GetAngles().y + item.entity_properties.yaw, 0))
                 ply:Horde_AddDropEntity(ent:GetClass(), ent)
                 ent:SetNWEntity("HordeOwner", ply)
+                ent:SetOwner(ply)
                 ent:Spawn()
 
                 if ent:IsNPC() then
