@@ -55,14 +55,18 @@ function ENT:OnRemove()
 
     ent:Spawn()
 
-    owner:Horde_AddDropEntity( ent:GetClass(), ent )
+    owner:Horde_RemoveDropEntity( self.TurretClass, self:GetCreationID() )
+    owner:Horde_AddDropEntity( self.TurretClass, ent )
+    owner:Horde_AddWeight( -4 )
 end
 
 local entMeta = FindMetaTable("Entity")
 
-function entMeta:SpawnUnweldedTurret( weldedClass, scale )
+function entMeta:SpawnUnweldedTurret( scale )
     local owner = self:GetOwner()
     if not IsValid( owner ) then return end
+
+    local weldedClass = self:GetClass()
 
     local model = self.Model
     local pos = self:GetPos()
@@ -84,8 +88,11 @@ function entMeta:SpawnUnweldedTurret( weldedClass, scale )
 
     ent:SetColor( color )
     ent:SetSkin( skinNum )
-    if mat then ent:SetMaterial( mat ) end
+    if mat ~= "" then ent:SetMaterial( mat ) end
     if scale then ent:SetModelScale( scale, 0 ) end
 
     ent:Spawn()
+
+    owner:Horde_AddDropEntity( weldedClass, ent )
+    owner:Horde_AddWeight( -4 )
 end

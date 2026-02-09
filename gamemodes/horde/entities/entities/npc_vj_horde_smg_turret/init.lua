@@ -219,7 +219,7 @@ function ENT:OnRemove()
     local owner = self:GetOwner()
     if not IsValid( owner ) then return end
 
-    self:SpawnUnweldedTurret( "npc_vj_horde_smg_turret" )
+    self:SpawnUnweldedTurret()
 end
 
 VJ.AddNPC( "SMG Turret", "npc_vj_horde_smg_turret", "Horde" )

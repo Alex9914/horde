@@ -405,7 +405,15 @@ hook.Add("PlayerSpawn", "Horde_Economy_Sync", function (ply)
     if HORDE.player_drop_entities[ply:SteamID()] then
         for _, ent in pairs(HORDE.player_drop_entities[ply:SteamID()]) do
             if ent:IsValid() then
-                local item = HORDE.items[ent:GetClass()]
+                local entClass = ent:GetClass()
+
+                local item
+                if entClass ~= "horde_unwelded_turret" then
+                    item = HORDE.items[entClass]
+                else
+                    item = HORDE.items[HORDE.player_drop_entities[ply:SteamID()][ent:GetCreationID()]:GetClass()]
+                end
+
                 if item then
                     ply:Horde_AddWeight(-item.weight)
                 end
@@ -816,7 +824,8 @@ net.Receive("Horde_SellItem", function (len, ply)
                         continue
                     end
 
-                    if ent:GetClass() == class then
+                    if ent:GetClass() == class or HORDE.player_drop_entities[ply:SteamID()][ent:GetCreationID()] then
+                        print(ent)
                         ent.Horde_Minion_Respawn = nil
                         timer.Remove("Horde_ManhackRespawn" .. ent:GetCreationID())
                         ent:Remove()
