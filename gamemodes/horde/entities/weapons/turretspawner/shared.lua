@@ -96,6 +96,11 @@ function SWEP:PrimaryAttack()
     ent:Spawn()
 
     ent:SetNWEntity( "HordeOwner", owner )
+    owner:Horde_AddDropEntity( ent:GetClass(), ent )
+
+    local item = HORDE.items["npc_vj_horde_smg_turret"]
+    owner:Horde_AddWeight( -item.weight )
+    owner:Horde_SyncEconomy()
 
     self:Remove()
 end

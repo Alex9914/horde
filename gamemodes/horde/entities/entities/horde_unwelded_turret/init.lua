@@ -15,7 +15,6 @@ function ENT:Initialize()
     self.RepairProgress = 0
 end
 
-
 function ENT:Repair( amount )
     self.RepairProgress = math.min( self.RepairProgress + amount, 100 )
 
@@ -44,6 +43,8 @@ function ENT:OnRemove()
     ent:SetOwner( owner )
     ent:Spawn()
 
-    ent:SetNWEntity( "HordeOwner", owner )
     ent:SetCollisionGroup( 5 )
+
+    ent:SetNWEntity( "HordeOwner", owner )
+    owner:Horde_AddDropEntity( ent:GetClass(), ent )
 end
