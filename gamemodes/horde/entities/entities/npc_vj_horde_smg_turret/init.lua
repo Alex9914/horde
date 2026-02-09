@@ -225,9 +225,6 @@ function ENT:OnRemove()
     ent:Spawn()
 
     ent:SetNWEntity( "HordeOwner", owner )
-    ent:SetCollisionGroup( 0 )
-    ent:SetSolid( SOLID_NONE )
-    ent:SetSolidFlags( FSOLID_TRIGGER )
 end
 
 VJ.AddNPC( "SMG Turret", "npc_vj_horde_smg_turret", "Horde" )

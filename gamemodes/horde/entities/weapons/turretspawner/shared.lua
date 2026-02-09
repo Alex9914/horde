@@ -96,9 +96,6 @@ function SWEP:PrimaryAttack()
     ent:Spawn()
 
     ent:SetNWEntity( "HordeOwner", owner )
-    ent:SetCollisionGroup( 0 )
-    ent:SetSolid( SOLID_NONE )
-    ent:SetSolidFlags( FSOLID_TRIGGER )
 
     self:Remove()
 end

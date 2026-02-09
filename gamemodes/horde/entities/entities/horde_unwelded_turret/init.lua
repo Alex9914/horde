@@ -7,9 +7,10 @@ util.AddNetworkString( "WireframeRepair_UpdateProgress" )
 
 function ENT:Initialize()
     self:SetModel( "models/combine_turrets/floor_turret.mdl" )
-    self:PhysicsInit( SOLID_VPHYSICS )
     self:SetMoveType( MOVETYPE_VPHYSICS )
-    self:SetSolid( SOLID_VPHYSICS )
+    self:SetSolid( SOLID_NONE )
+    self:SetSolidFlags( FSOLID_TRIGGER )
+    self:SetCollisionGroup( 0 )
 
     self.RepairProgress = 0
 end
