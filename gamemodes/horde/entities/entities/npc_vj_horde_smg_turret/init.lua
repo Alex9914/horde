@@ -94,7 +94,7 @@ function ENT:CustomOnInitialize()
     self:SetCollisionGroup( COLLISION_GROUP_WORLD )
 
     timer.Simple( 0, function ()
-        self:DropTurret()
+        HORDE:DropTurret( self )
 
         if self.Horde_Is_Mini_Sentry then
             self:SetMaxHealth(200)
