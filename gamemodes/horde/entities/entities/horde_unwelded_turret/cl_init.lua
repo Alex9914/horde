@@ -41,6 +41,7 @@ function ENT:Draw()
         local enabled = render.EnableClipping( true )
         render.PushCustomClipPlane( normal, distance )
         self:DrawModel()
+
         render.PopCustomClipPlane()
         render.EnableClipping( enabled )
     end
@@ -50,6 +51,7 @@ function ENT:Draw()
         local enabled = render.EnableClipping( true )
         render.PushCustomClipPlane( -normal, -distance )
         self:DrawModel()
+
         render.PopCustomClipPlane()
         render.EnableClipping( enabled )
         render.MaterialOverride( nil )
