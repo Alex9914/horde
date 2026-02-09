@@ -97,8 +97,8 @@ function ENT:CustomOnInitialize()
         HORDE:DropTurret( self )
 
         if self.Horde_Is_Mini_Sentry then
-            self:SetMaxHealth(200)
-            self:SetHealth(200)
+            self:SetMaxHealth( 200 )
+            self:SetHealth( 200 )
         end
     end )
 end
@@ -217,14 +217,9 @@ end
 
 function ENT:OnRemove()
     local owner = self:GetOwner()
+    if not IsValid( owner ) then return end
 
-    local ent = ents.Create( "horde_unwelded_turret" )
-    ent:SetPos( self:GetPos() )
-    ent:SetAngles( self:GetAngles() )
-    ent:SetOwner( owner )
-    ent:Spawn()
-
-    ent:SetNWEntity( "HordeOwner", owner )
+    HORDE:SpawnUnweldedTurret( owner, "npc_vj_horde_smg_turret", self.Model, self:GetPos(), self:GetAngles() )
 end
 
 VJ.AddNPC( "SMG Turret", "npc_vj_horde_smg_turret", "Horde" )
