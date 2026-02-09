@@ -90,7 +90,7 @@ function SWEP:PrimaryAttack()
     self.LastTurret = ent
     local ang = Angle( 0, owner:EyeAngles().y, 0 )
 
-    ent:SetPos( pos )
+    ent:SetPos( pos + vector_up )
     ent:SetAngles( ang )
     ent:SetOwner( owner )
     ent:Spawn()
