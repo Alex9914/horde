@@ -117,9 +117,9 @@ function HORDE:SaveMapAchievements()
     local ply = MySelf
     if not ply:IsValid() then return end
 
-	if not file.IsDir("horde/achievements/", "DATA") then
-		file.CreateDir("horde/achievements/", "DATA")
-	end
+    if not file.IsDir("horde/achievements/", "DATA") then
+        file.CreateDir("horde/achievements/", "DATA")
+    end
 
     if not HORDE.achievements_map[map] then
         HORDE.achievements_map[map] = {}
@@ -174,12 +174,12 @@ function HORDE:SaveMapAchievements()
 
     HORDE.achievements_map[map].extra = extra
 
-	path = "horde/achievements/maps.txt"
+    path = "horde/achievements/maps.txt"
 
-	strm = file.Open(path, "wb", "DATA" )
-		strm:Write(EXPECTED_HEADER)
+    strm = file.Open(path, "wb", "DATA" )
+        strm:Write(EXPECTED_HEADER)
         strm:Write(util.TableToJSON(HORDE.achievements_map))
-	strm:Close()
+    strm:Close()
 
     local new_achievements = HORDE:GetMapAchievements(map)
     local count_new = new_achievements["completion_count"]
@@ -200,14 +200,14 @@ HORDE.has_new_update = nil
 function HORDE:CheckUpdate()
     path = "horde/achievements/update.txt"
     if not file.IsDir("horde/achievements/", "DATA") then
-		file.CreateDir("horde/achievements/", "DATA")
+        file.CreateDir("horde/achievements/", "DATA")
         HORDE.has_new_update = true
         RunConsoleCommand("horde_stats")
         strm = file.Open(path, "wb", "DATA" )
             strm:Write(HORDE.version)
         strm:Close()
         return
-	end
+    end
 
     if file.Exists(path, "DATA") == false then
         HORDE.has_new_update = true
@@ -217,7 +217,7 @@ function HORDE:CheckUpdate()
         strm:Close()
     else
         strm = file.Open(path, "rb", "DATA" )
-		local header = strm:Read(#HORDE.version)
+        local header = strm:Read(#HORDE.version)
         if header ~= HORDE.version then
             HORDE.has_new_update = true
             RunConsoleCommand("horde_stats")
@@ -237,9 +237,9 @@ function HORDE:SaveClassAchievemnts()
     local ply = MySelf
     if not ply:IsValid() then return end
 
-	if not file.IsDir("horde/achievements/classes", "DATA") then
-		file.CreateDir("horde/achievements/classes", "DATA")
-	end
+    if not file.IsDir("horde/achievements/classes", "DATA") then
+        file.CreateDir("horde/achievements/classes", "DATA")
+    end
 
     if HORDE.achievemnts_class[class] then
         if HORDE.achievemnts_class[class][difficulty] then return end
@@ -249,24 +249,24 @@ function HORDE:SaveClassAchievemnts()
         HORDE.achievemnts_class[class][difficulty] = true
     end
 
-	path = "horde/achievements/classes.txt"
+    path = "horde/achievements/classes.txt"
 
-	strm = file.Open(path, "wb", "DATA" )
-		strm:Write(EXPECTED_HEADER)
+    strm = file.Open(path, "wb", "DATA" )
+        strm:Write(EXPECTED_HEADER)
         strm:WriteString(util.TableToJSON(HORDE.achievemnts_class))
-	strm:Close()
+    strm:Close()
 end
 
 function HORDE:LoadMapAchievements()
     local ply = MySelf
     if not ply:IsValid() then return end
 
-	if not file.IsDir("horde/achievements/", "DATA") then
-		file.CreateDir("horde/achievements/", "DATA")
+    if not file.IsDir("horde/achievements/", "DATA") then
+        file.CreateDir("horde/achievements/", "DATA")
         return
-	end
+    end
 
-	path = "horde/achievements/maps.txt"
+    path = "horde/achievements/maps.txt"
     if file.Exists(path, "DATA") == false then
         strm = file.Open(path, "wb", "DATA" )
             strm:Write(EXPECTED_HEADER)
@@ -274,8 +274,8 @@ function HORDE:LoadMapAchievements()
         strm:Close()
     end
 
-	strm = file.Open(path, "rb", "DATA" )
-		local header = strm:Read(#EXPECTED_HEADER)
+    strm = file.Open(path, "rb", "DATA" )
+        local header = strm:Read(#EXPECTED_HEADER)
         local f = strm:Read()
         if header == EXPECTED_HEADER then
             if f then
@@ -286,28 +286,28 @@ function HORDE:LoadMapAchievements()
             HORDE.achievements_map[game.GetMap()] = {}
             HORDE.achievements_map[game.GetMap()]["extra"] = {}
         end
-	strm:Close()
+    strm:Close()
 end
 
 function HORDE:LoadClassAchievements()
     local ply = MySelf
     if not ply:IsValid() then return end
 
-	if not file.IsDir("horde/achievements/classes", "DATA") then
-		file.CreateDir("horde/achievements/classes", "DATA")
+    if not file.IsDir("horde/achievements/classes", "DATA") then
+        file.CreateDir("horde/achievements/classes", "DATA")
         return
-	end
+    end
 
-	path = "horde/achievements/classes" .. HORDE:ScrubSteamID(ply) .. ".txt"
+    path = "horde/achievements/classes" .. HORDE:ScrubSteamID(ply) .. ".txt"
 
-	strm = file.Open(path, "wb", "DATA" )
-		local header = strm:Read(EXPECTED_HEADER)
+    strm = file.Open(path, "wb", "DATA" )
+        local header = strm:Read(EXPECTED_HEADER)
         if header == EXPECTED_HEADER then
             HORDE.achievemnts_class = util.JSONToTable(strm:ReadString())
         else
             return
         end
-	strm:Close()
+    strm:Close()
 end
 
 net.Receive("Horde_SaveAchievements", function ()
