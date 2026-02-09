@@ -93,6 +93,8 @@ function SWEP:PrimaryAttack()
     ent:SetPos( pos + vector_up )
     ent:SetAngles( ang )
     ent:SetOwner( owner )
+    ent:SetModel( "models/combine_turrets/floor_turret.mdl" )
+    ent:SetClass( "npc_vj_horde_smg_turret" )
     ent:Spawn()
 
     ent:SetNWEntity( "HordeOwner", owner )
