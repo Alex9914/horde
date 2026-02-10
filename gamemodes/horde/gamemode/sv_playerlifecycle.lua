@@ -80,7 +80,7 @@ local function setNextMapDifficulty()
     end
 
     if not foundDiff then
-        GetConVar( "horde_difficulty" ):SetInt( 6 )
+        GetConVar( "horde_difficulty" ):SetInt( 3 )
     end
 end
 
@@ -684,8 +684,6 @@ end)
 hook.Add("PlayerSpawn", "Horde_PlayerInitialSpawn", function(ply)
     if ply.Horde_Fake_Respawn == true then return end
 
-    ply:SetCollisionGroup(15)
-
     timer.Simple(0, function() -- lua/includes/modules/player_manager.lua sets SetAvoidPlayer back to true
         if not IsValid(ply) then return end
 
@@ -889,7 +887,7 @@ hook.Add("DoPlayerDeath", "Horde_DoPlayerDeath", function(victim)
         end end)
         return
     end
-    HORDE:SendNotification("You are dead. You will respawn next wave.", 1, victim)
+    HORDE:SendNotification("You are dead. A friendly player can revive you.", 1, victim)
     HORDE:CheckAlivePlayers()
 
     local tip = HORDE:GetTip()
