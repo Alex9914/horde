@@ -3,7 +3,7 @@ HORDE.GlobalAchievements = HORDE.GlobalAchievements or {}
 
 local ACH_PATH = "zmod_horde/achievements.json"
 local DEFAULT_MAP = "z_default" -- To store created achievements to copy from
-local CURRENT_MAP = game.GetMap() or "unknown"
+local CURRENT_MAP = game.GetMap()
 
 local globalAchOrder = 1
 function HORDE:CreateGlobalAchievement( id, cat, title, desc )
@@ -53,18 +53,25 @@ local function fillEmptyMap( map )
     local from = HORDE.MapAchievements[DEFAULT_MAP]
 
     HORDE.MapAchievements[map] = {}
-    local to = HORDE.MapAchievements[map]
 
-    table.CopyFromTo( from, to )
+    for id, ach in pairs( from ) do
+        HORDE.MapAchievements[map][id] = {
+            order = ach.order,
+            cat = ach.cat,
+            title = ach.title,
+            desc = ach.desc,
+            unlocked = false
+        }
+    end
 
     return HORDE.MapAchievements[map]
 end
 
 function HORDE:LoadAchievements()
-    if not file.Exists( ACH_PATH, "DATA" ) then return end
+    if not file.Exists( ACH_PATH, "DATA" ) then fillEmptyMap( CURRENT_MAP ) return end
 
     local data = file.Read( ACH_PATH, "DATA" )
-    if not data then return end
+    if not data then fillEmptyMap( CURRENT_MAP ) return end
 
     local saved = util.JSONToTable( data ) or {}
     local savedGlobal = saved.GlobalAchievements
@@ -79,6 +86,8 @@ function HORDE:LoadAchievements()
     end
 
     if savedMap then
+        if not savedMap[CURRENT_MAP] then fillEmptyMap( CURRENT_MAP ) end
+
         for map, achi in pairs( savedMap ) do
             for id, ach in pairs( fillEmptyMap( map ) ) do
                 if achi[id] and achi[id].unlocked ~= nil then
@@ -86,6 +95,8 @@ function HORDE:LoadAchievements()
                 end
             end
         end
+    else
+        fillEmptyMap( CURRENT_MAP )
     end
 end
 
@@ -102,7 +113,9 @@ function HORDE:SaveAchievements()
     for map, achi in pairs( HORDE.MapAchievements ) do
         if map ~= DEFAULT_MAP then
             saveData.MapAchievements[map] = {}
+            print(map)
             for id, ach in pairs( achi ) do
+                print(id)
                 saveData.MapAchievements[map][id] = {}
                 saveData.MapAchievements[map][id].unlocked = ach.unlocked
             end
@@ -114,12 +127,10 @@ function HORDE:SaveAchievements()
         saveData.GlobalAchievements[id].unlocked = ach.unlocked
     end
 
-    file.Write( ACH_PATH, util.TableToJSON( saveData ) )
+    file.Write( ACH_PATH, util.TableToJSON( saveData, true ) )
 end
 
 function HORDE:GiveMapAchievement( id )
-    HORDE.MapAchievements[CURRENT_MAP] = HORDE.MapAchievements[CURRENT_MAP] or {}
-
     local ach = HORDE.MapAchievements[CURRENT_MAP][id]
     if not ach or ach.unlocked then return end
 
@@ -168,7 +179,7 @@ hook.Add( "Initialize", "Horde_LoadAchievements", function()
     HORDE:LoadAchievements()
 end )
 
-net.Receive( "Horde_SaveAchievements", function ()
+net.Receive( "Horde_SaveAchievements", function()
     HORDE:SaveAchievements()
 end )
 
