@@ -932,16 +932,6 @@ function PANEL:Init()
         surface.PlaySound("UI/buttonclick.wav")
     end
 
-    learn_btn.OnCursorEntered = function ()
-        surface.PlaySound("UI/buttonrollover.wav")
-        learn_hovered = true
-    end
-
-    learn_btn.OnCursorExited = function ()
-        surface.PlaySound("UI/buttonrollover.wav")
-        learn_hovered = false
-    end
-
     local discord_btn = vgui.Create("DButton", self)
     local discord_activated = false
     local discord_hovered = false
@@ -980,6 +970,36 @@ function PANEL:Init()
     end
     donate_btn.DoClick = function ()
         gui.OpenURL("https://store.zmod.gg/")
+    end
+
+    learn_btn.OnCursorEntered = function ()
+        surface.PlaySound("UI/buttonrollover.wav")
+        learn_hovered = true
+    end
+
+    learn_btn.OnCursorExited = function ()
+        surface.PlaySound("UI/buttonrollover.wav")
+        learn_hovered = false
+    end
+
+    discord_btn.OnCursorEntered = function ()
+        surface.PlaySound("UI/buttonrollover.wav")
+        discord_hovered = true
+    end
+
+    discord_btn.OnCursorExited = function ()
+        surface.PlaySound("UI/buttonrollover.wav")
+        discord_hovered = false
+    end
+
+    donate_btn.OnCursorEntered = function ()
+        surface.PlaySound("UI/buttonrollover.wav")
+        donate_hovered = true
+    end
+
+    donate_btn.OnCursorExited = function ()
+        surface.PlaySound("UI/buttonrollover.wav")
+        donate_hovered = false
     end
 
     local close_btn = vgui.Create("DButton", self)
