@@ -90,14 +90,14 @@ function PANEL:Init()
         achievement:Dock(TOP)
         achievement.Paint = function ()
             if unlocked then
-                draw.RoundedBox(10, 0, 0, map_achievements_panel:GetWide() - 25, 100, HORDE.color_crimson)
+                draw.RoundedBox(10, 0, 0, map_achievements_panel:GetWide() - 25, 100, HORDE.color_config_bar)
                 draw.SimpleText(title, 'LargeTitle', 50, 25, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 draw.SimpleText(desc, 'Trebuchet24',  50, 75, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 surface.SetMaterial(Material("trophy.png", "mips smooth"))
                 surface.SetDrawColor(color_white)
                 surface.DrawTexturedRect(map_achievements_panel:GetWide() - 125, 25, 50, 50)
             else
-                draw.RoundedBox(10, 0, 0, map_achievements_panel:GetWide() - 25, 100, HORDE.color_hollow_dim)
+                draw.RoundedBox(10, 0, 0, map_achievements_panel:GetWide() - 25, 100, HORDE.color_config_bar)
                 draw.SimpleText(title, 'LargeTitle', 50, 25, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 draw.SimpleText(desc, 'Trebuchet24',  50, 75, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 surface.SetMaterial(Material("locked.png", "mips smooth"))
@@ -120,7 +120,7 @@ function PANEL:Init()
         map_btn:SetText("")
         map_btn.Paint = function ()
             if map_btn_hovered or (self.map_btns[map_btn] == 1) then draw.RoundedBox(0, 0, 10, self:GetWide(), self:GetTall(), HORDE.color_crimson) return end
-            draw.RoundedBox(0, 0, 0, self:GetWide(), self:GetTall(), HORDE.color_hollow)
+            draw.RoundedBox(0, 0, 10, self:GetWide(), self:GetTall(), HORDE.color_config_bar)
         end
         map_btn.OnCursorEntered = function ()
             map_btn_hovered = true
