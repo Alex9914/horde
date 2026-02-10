@@ -112,9 +112,9 @@ function PANEL:Init()
 
     self.map_btns = {}
     self.create_map_btn = function (map)
-        local map_btn = vgui.Create("DButton", maps_panel)
+        local map_btn = vgui.Create("DButton", self.map_ach_cat)
         local map_btn_hovered = false
-        map_btn:DockMargin(10, 5, 10, 5)
+        map_btn:DockMargin(0, 0, 0, 0)
         map_btn:SetSize(self:GetParent():GetWide(), 50)
         map_btn:Dock(TOP)
         map_btn:SetText("")
@@ -163,6 +163,100 @@ function PANEL:Init()
 
         self.map_btns[map_btn] = 0
     end
+
+    self.create_ach_dropdown = function(text)
+        local seperator = vgui.Create("DCollapsibleCategory", maps_panel)
+        local seperator_hovered = false
+        local seperator_activated = true
+        seperator:DockMargin(10, 10, 10, 0)
+        seperator:SetLabel("")
+        seperator:SetSize(seperator:GetParent():GetWide(), 50)
+        seperator:Dock(TOP)
+        seperator.Paint = function(_, w, h)
+            if seperator_hovered or seperator_activated then
+                draw.RoundedBox(0, 0, 0, w, h, HORDE.color_crimson_dark)
+                draw.RoundedBox(0, 0, 0, w, 20, HORDE.color_crimson)
+            else
+                draw.RoundedBox(0, 0, 0, w, h, HORDE.color_config_bar)
+            end
+
+            draw.SimpleText(text, "Horde_PerkButton_Text", 10, 4, color_white, TEXT_ALIGN_LEFT)
+        end
+        seperator.OnCursorEntered = function()
+            surface.PlaySound("UI/buttonrollover.wav")
+            seperator_hovered = true
+        end
+        seperator.OnCursorExited = function()
+            surface.PlaySound("UI/buttonrollover.wav")
+            seperator_hovered = false
+        end
+        seperator.OnToggle = function(_, expanded)
+            surface.PlaySound("UI/buttonrollover.wav")
+            seperator_activated = expanded
+        end
+
+        return seperator
+    end
+
+    local ach_all_btn = vgui.Create("DButton", maps_panel)
+    local ach_all_btn_activated = false
+    local ach_all_btn_hovered = false
+    ach_all_btn:DockMargin(10, 5, 10, 5)
+    ach_all_btn:SetSize( ach_all_btn:GetParent():GetWide(), 50)
+    ach_all_btn:Dock(TOP)
+    ach_all_btn:SetText("")
+    ach_all_btn.Paint = function()
+        if ach_all_btn_hovered or ach_all_btn_activated then
+            draw.RoundedBox(0, 0, 10, self:GetWide(), self:GetTall(), HORDE.color_crimson)
+        else
+            draw.RoundedBox(0, 0, 10, self:GetWide(), self:GetTall(), HORDE.color_config_bar)
+        end
+
+        draw.SimpleText("All Achievements", "Content", 10, 20, Color(255,255,255), TEXT_ALIGN_LEFT)
+    end
+    ach_all_btn.OnCursorEntered = function ()
+        surface.PlaySound("UI/buttonrollover.wav")
+        ach_all_btn_hovered = true
+    end
+    ach_all_btn.OnCursorExited = function ()
+        surface.PlaySound("UI/buttonrollover.wav")
+        ach_all_btn_hovered = false
+    end
+    ach_all_btn.DoClick = function ()
+        surface.PlaySound("UI/buttonclick.wav")
+    end
+
+    self.map_ach_global_all = self.create_ach_dropdown("Global Achievements")
+
+    local topSel = vgui.Create("DButton", self.map_ach_global_all)
+    local topSel_btn_activated = false
+    local topSel_btn_hovered = false
+    topSel:DockMargin(0, 0, 0, 0)
+    topSel:SetSize( topSel:GetParent():GetWide(), 50 )
+    topSel:Dock(TOP)
+    topSel:SetText("")
+    topSel.Paint = function ()
+        if topSel_btn_hovered or topSel_btn_activated then
+            draw.RoundedBox(0, 0, 10, self:GetWide(), self:GetTall(), HORDE.color_crimson)
+        else
+            draw.RoundedBox(0, 0, 10, self:GetWide(), self:GetTall(), HORDE.color_config_bar)
+        end
+
+        draw.SimpleText("All Global Achievements", "Content", 10, 20, Color(255,255,255), TEXT_ALIGN_LEFT)
+    end
+    topSel.OnCursorEntered = function ()
+        surface.PlaySound("UI/buttonrollover.wav")
+        topSel_btn_hovered = true
+    end
+    topSel.OnCursorExited = function ()
+        surface.PlaySound("UI/buttonrollover.wav")
+        topSel_btn_hovered = false
+    end
+    topSel.DoClick = function ()
+        surface.PlaySound("UI/buttonclick.wav")
+    end
+
+    self.map_ach_cat = self.create_ach_dropdown("Map Achievements")
 
     for map, ach in SortedPairs(HORDE.MapAchievements) do
         if map ~= "z_default" then
