@@ -168,7 +168,7 @@ function PANEL:Init()
         local seperator = vgui.Create("DCollapsibleCategory", maps_panel)
         local seperator_hovered = false
         local seperator_activated = true
-        seperator:DockMargin(10, 10, 10, 0)
+        seperator:DockMargin(10, 10, 10, 10)
         seperator:SetLabel("")
         seperator:SetSize(seperator:GetParent():GetWide(), 50)
         seperator:Dock(TOP)
