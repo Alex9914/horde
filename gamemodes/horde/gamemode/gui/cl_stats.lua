@@ -952,10 +952,6 @@ function PANEL:Init()
     close_btn:SetSize(32, 32)
     close_btn:SetPos(self:GetWide() - 40, 8)
     close_btn.DoClick = function() HORDE:ToggleStats() end
-
-    if HORDE.has_new_update then
-        learn_btn:DoClick()
-    end
 end
 
 function PANEL:Paint(w, h)
