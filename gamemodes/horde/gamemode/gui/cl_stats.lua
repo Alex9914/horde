@@ -83,12 +83,12 @@ function PANEL:Init()
     local function firstToUpper(str)
         return (str:gsub("^%l", string.upper))
     end
-    self.create_map_achievement_btn = function (map, title, unlocked)
+    self.create_map_achievement_btn = function (map, title, desc, unlocked)
         local achievement = vgui.Create("DPanel", map_achievements_panel)
         achievement:DockMargin(10, 5, 10, 5)
         achievement:SetSize(self:GetParent():GetWide() - 50, 100)
         achievement:Dock(TOP)
-        local content = HORDE.MapAchievement_Descriptions[title]
+        local content = desc
         local ss = string.Split(map, "_")
         if ss[1] == "zs" or ss[1] == "de" or ss[1] == "hr" or ss[1] == "cs" or ss[1] == "gm" or ss[1] == "ow" or ss[1] == "zm" or ss[1] == "kf2" then
             local i = 1
@@ -125,11 +125,7 @@ function PANEL:Init()
         table.insert(map_achievement_btns, achievement)
     end
 
-    --HORDE:LoadAchievements()
     local achievements = {}
-    --for map, stats in pairs(HORDE.achievements_map) do
-        achievements["no"] = {}--HORDE:GetMapAchievements(map)
-    --end
 
     self.map_btns = {}
     self.create_map_btn = function (map)
@@ -167,18 +163,9 @@ function PANEL:Init()
                 achievements[map]["completion_count"] = 0
             end
 
-            self.create_map_achievement_btn(map, HORDE.MapAchievements.normal, achievements[map][HORDE.MapAchievements.normal])
-            self.create_map_achievement_btn(map, HORDE.MapAchievements.hard, achievements[map][HORDE.MapAchievements.hard])
-            self.create_map_achievement_btn(map, HORDE.MapAchievements.realism, achievements[map][HORDE.MapAchievements.realism])
-            self.create_map_achievement_btn(map, HORDE.MapAchievements.nightmare, achievements[map][HORDE.MapAchievements.nightmare])
-            self.create_map_achievement_btn(map, HORDE.MapAchievements.apocalypse, achievements[map][HORDE.MapAchievements.apocalypse])
-            self.create_map_achievement_btn(map, HORDE.MapAchievements.coop, achievements[map][HORDE.MapAchievements.coop])
-            self.create_map_achievement_btn(map, HORDE.MapAchievements.horde, achievements[map][HORDE.MapAchievements.horde])
-            self.create_map_achievement_btn(map, HORDE.MapAchievements.hardcore_horde, achievements[map][HORDE.MapAchievements.hardcore_horde])
-            self.create_map_achievement_btn(map, HORDE.MapAchievements.coop_horde, achievements[map][HORDE.MapAchievements.coop_horde])
-            self.create_map_achievement_btn(map, HORDE.MapAchievements.hardcore_coop_horde, achievements[map][HORDE.MapAchievements.hardcore_coop_horde])
-            self.create_map_achievement_btn(map, HORDE.MapAchievements.endless_20, achievements[map][HORDE.MapAchievements.endless_20])
-            self.create_map_achievement_btn(map, HORDE.MapAchievements.endless_30, achievements[map][HORDE.MapAchievements.endless_30])
+            for _, ach in pairs(achievements[map]) do
+                self.create_map_achievement_btn(map, ach.title, ach.desc, ach.unlocked)
+            end
         end
 
         local name_label = vgui.Create("DLabel", map_btn)
@@ -225,12 +212,12 @@ function PANEL:Init()
         self.map_btns[map_btn] = 0
     end
 
-    --for map, _ in SortedPairs(HORDE.achievements_map) do
-        --if not achievements[map] then
-            --achievements[map] = {}
-        --end
-        --self.create_map_btn(map)
-    --end
+    for map, ach in SortedPairs(HORDE.MapAchievements) do
+        if map ~= "z_default" then
+            achievements[map] = ach
+            self.create_map_btn(map)
+        end
+    end
 
     local learn_panel = vgui.Create("DPanel", self)
     learn_panel:SetPos(0, 50)
