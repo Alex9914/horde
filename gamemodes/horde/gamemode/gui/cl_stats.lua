@@ -799,6 +799,15 @@ function PANEL:Init()
             draw.RoundedBox(0, 0, 0, 250, 50, HORDE.color_hollow)
         end
     end
+    stats_btn.DoClick = function ()
+        stats_activated = true
+        achievements_activated = nil
+        learn_activated = nil
+        stats_panel:SetVisible(true)
+        achievements_panel:SetVisible(false)
+        learn_panel:SetVisible(false)
+        surface.PlaySound("UI/buttonclick.wav")
+    end
     stats_btn.OnCursorEntered = function ()
         surface.PlaySound("UI/buttonrollover.wav")
         stats_hovered = true
@@ -823,6 +832,15 @@ function PANEL:Init()
         else
             draw.RoundedBox(0, 0, 0, 250, 50, HORDE.color_hollow)
         end
+    end
+    achievements_btn.DoClick = function ()
+        achievements_activated = true
+        stats_activated = nil
+        learn_activated = nil
+        achievements_panel:SetVisible(true)
+        stats_panel:SetVisible(false)
+        learn_panel:SetVisible(false)
+        surface.PlaySound("UI/buttonclick.wav")
     end
     achievements_btn.OnCursorEntered = function ()
         surface.PlaySound("UI/buttonrollover.wav")
@@ -849,35 +867,6 @@ function PANEL:Init()
             draw.RoundedBox(0, 0, 0, 250, 50, HORDE.color_hollow)
         end
     end
-    learn_btn.OnCursorEntered = function ()
-        surface.PlaySound("UI/buttonrollover.wav")
-        learn_hovered = true
-    end
-    learn_btn.OnCursorExited = function ()
-        surface.PlaySound("UI/buttonrollover.wav")
-        learn_hovered = false
-    end
-
-    stats_btn.DoClick = function ()
-        stats_activated = true
-        achievements_activated = nil
-        learn_activated = nil
-        stats_panel:SetVisible(true)
-        achievements_panel:SetVisible(false)
-        learn_panel:SetVisible(false)
-        surface.PlaySound("UI/buttonclick.wav")
-    end
-
-    achievements_btn.DoClick = function ()
-        achievements_activated = true
-        stats_activated = nil
-        learn_activated = nil
-        achievements_panel:SetVisible(true)
-        stats_panel:SetVisible(false)
-        learn_panel:SetVisible(false)
-        surface.PlaySound("UI/buttonclick.wav")
-    end
-
     learn_btn.DoClick = function ()
         achievements_activated = nil
         stats_activated = nil
@@ -886,6 +875,14 @@ function PANEL:Init()
         stats_panel:SetVisible(false)
         learn_panel:SetVisible(true)
         surface.PlaySound("UI/buttonclick.wav")
+    end
+    learn_btn.OnCursorEntered = function ()
+        surface.PlaySound("UI/buttonrollover.wav")
+        learn_hovered = true
+    end
+    learn_btn.OnCursorExited = function ()
+        surface.PlaySound("UI/buttonrollover.wav")
+        learn_hovered = false
     end
 
     local discord_btn = vgui.Create("DButton", self)
