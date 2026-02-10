@@ -88,35 +88,18 @@ function PANEL:Init()
         achievement:DockMargin(10, 5, 10, 5)
         achievement:SetSize(self:GetParent():GetWide() - 50, 100)
         achievement:Dock(TOP)
-        local content = desc
-        local ss = string.Split(map, "_")
-        if ss[1] == "zs" or ss[1] == "de" or ss[1] == "hr" or ss[1] == "cs" or ss[1] == "gm" or ss[1] == "ow" or ss[1] == "zm" or ss[1] == "kf2" then
-            local i = 1
-            for _, sb in pairs(ss) do
-                if i > 1 then
-                    if i == 2 then
-                        map = firstToUpper(ss[2])
-                    else
-                        map = map .. " " .. firstToUpper(ss[i])
-                    end
-                end
-                i = i + 1
-            end
-        else
-            map = string.upper(map)
-        end
         achievement.Paint = function ()
             if unlocked then
                 draw.RoundedBox(10, 0, 0, map_achievements_panel:GetWide() - 25, 100, HORDE.color_crimson)
-                draw.SimpleText(map .. ": " .. title, 'LargeTitle', 50, 25, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-                draw.SimpleText(content, 'Trebuchet24',  50, 75, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText(title, 'LargeTitle', 50, 25, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText(desc, 'Trebuchet24',  50, 75, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 surface.SetMaterial(Material("trophy.png", "mips smooth"))
                 surface.SetDrawColor(color_white)
                 surface.DrawTexturedRect(map_achievements_panel:GetWide() - 125, 25, 50, 50)
             else
                 draw.RoundedBox(10, 0, 0, map_achievements_panel:GetWide() - 25, 100, HORDE.color_hollow_dim)
-                draw.SimpleText(map .. ": " .. title, 'LargeTitle', 50, 25, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-                draw.SimpleText(content, 'Trebuchet24',  50, 75, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText(title, 'LargeTitle', 50, 25, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText(desc, 'Trebuchet24',  50, 75, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 surface.SetMaterial(Material("locked.png", "mips smooth"))
                 surface.SetDrawColor(color_white)
                 surface.DrawTexturedRect(map_achievements_panel:GetWide() - 125, 25, 50, 50)
