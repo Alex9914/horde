@@ -74,17 +74,10 @@ function PANEL:Init()
     map_achievements_panel:SetSize(self:GetParent():GetWide() - 300, self:GetParent():GetTall())
     map_achievements_panel.Paint = function ()
         if map_clicked then return end
-        draw.SimpleText('Complete maps on 10 waves to earn achievements!', 'LargeTitle', 50, 50, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        draw.SimpleText('Complete maps to earn achievements!', 'LargeTitle', 50, 50, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         draw.DrawText([[
-        *Notes: Achievements are disabled in sandbox mode.
-
-        To achieve the special Horde Completion achievement, you need:
-          - Default Config Enabled
-          - Default Settings:
-            - Base Start Money <= 1000
-            - Base Round bonus <= 500
-            - Base Walk Speed <= 180
-            - Base Run Speed <= 220]], 'Content', 50, 100, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            I don't know
+        ]], 'Content', 50, 100, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
 
     local function firstToUpper(str)
@@ -132,11 +125,11 @@ function PANEL:Init()
         table.insert(map_achievement_btns, achievement)
     end
 
-    HORDE:LoadMapAchievements()
+    --HORDE:LoadAchievements()
     local achievements = {}
-    for map, stats in pairs(HORDE.achievements_map) do
-        achievements[map] = HORDE:GetMapAchievements(map)
-    end
+    --for map, stats in pairs(HORDE.achievements_map) do
+        achievements["no"] = {}--HORDE:GetMapAchievements(map)
+    --end
 
     self.map_btns = {}
     self.create_map_btn = function (map)
@@ -232,12 +225,12 @@ function PANEL:Init()
         self.map_btns[map_btn] = 0
     end
 
-    for map, _ in SortedPairs(HORDE.achievements_map) do
-        if not achievements[map] then
-            achievements[map] = {}
-        end
-        self.create_map_btn(map)
-    end
+    --for map, _ in SortedPairs(HORDE.achievements_map) do
+        --if not achievements[map] then
+            --achievements[map] = {}
+        --end
+        --self.create_map_btn(map)
+    --end
 
     local learn_panel = vgui.Create("DPanel", self)
     learn_panel:SetPos(0, 50)
@@ -254,104 +247,6 @@ function PANEL:Init()
     local description_panel = vgui.Create("DScrollPanel", learn_panel)
     description_panel:Dock(FILL)
     description_panel:SetSize(self:GetParent():GetWide() - 266, self:GetParent():GetTall())
-
-    local update_text_panel = vgui.Create("DPanel", description_panel)
-    update_text_panel:SetSize(self:GetParent():GetWide(), 2000)
-    update_text_panel:SetVisible(true)
-    local update_text =[[
-        -- Assist
-            Added a simple assist reward.
-
-        -- Class Grenades
-        Each class now has its own unique grenade that complements its playstyle.
-        Grenades have an ammo limit of 6 in total.
-
-        < Assasult: Stun Grenade (arccw_horde_nade_stun)
-        < Heavy: Shrapnel Grenade (arccw_horde_nade_shrapnel)
-        < Ghost: Sonar Grenade (arccw_horde_nade_sonar)
-        < Demolition: M67 Frag Grenade (arccw_horde_m67)
-        < Medic: Medic Grenade (arccw_nade_medic)
-        < Engineer: Nanobot Grenade (arccw_horde_nade_nanobot)
-        < Berserker: Hemo Grenade (arccw_horde_nade_hemo)
-        < Warden: EMP Grenade (arccw_horde_nade_emp)
-        < Cremator: Molotov (arccw_horde_nade_molotov)
-
-        -- Assault Class Changes:
-        Item Changes:
-            < Rebalanced weapon damage values and prices. The goal is to make more high tier weapons available.
-            < Reworked Weapon: FAMAS (arccw_horde_famas)
-            < Reworked Weapon: Galil (arccw_horde_ace)
-            < Reworked Weapon: M4A1 (arccw_horde_m4)
-            < Reworked Weapon: AK47 (arccw_horde_ak47)
-            < Reworked Weapon: SG556 (arccw_horde_sg556)
-            < Reworked Weapon: AUG (arccw_horde_aug)
-
-        -- Heavy Class Changes
-        Perk Changes:
-            < Added maximum armor bonus passive.
-            < Ballistic Shock effect changed.
-            < Reactive Armor perk effect changed.
-
-        Item Changes:
-            < Rebalanced weapon damage values and prices. The goal is to make more high tier weapons available.
-            < Weapons with visible Bipods will now have Bipods by default.
-            < Energy Shield gadget effect changed.
-            < ULPA Filter gadget effect changed.
-            < New Gadget: Armor Fusion (gadget_armor_fusion)
-
-        -- Demolition Class Changes
-        Perk changes:
-            < Reduced Blast resistance passive
-            < Added Blast damage bonus passive
-            < Pressurized Warhead / Chain Reaction effects changed
-
-        Weapon changes:
-            < All default config demolition weapons now have arm distance and headshot detection.
-            < Added two new attachments for explosive projectile weapons.
-            < Rebalanced weapon damage values.
-            < New Weapon: FGM-148 Javelin (arccw_horde_javelin)
-
-        -- Medic Class Changes:
-        Item Changes:
-            < New Weapon: MP9 Medic (arccw_horde_mp9m)
-            < New Weapon: MP5K Medic (arccw_horde_mp5k)
-            < New Weapon: ACR Medic (arccw_horde_medic_acr)
-            < New Gadget: Aegis (gadget_aegis)
-
-        -- Ghost Class Changes:
-        Item Changes:
-            < Slightly reduced damage of Barrett and M200.
-            < Increased price and damage of AWP.
-            < Increased damage of heat crossbow.
-            < Automatic weapons have been removed from Ghost weapon pool.
-            < Dual pistols off-hand damage have been fixed.
-            < New Weapon: SSG08 (arccw_horde_ssg08)
-
-        -- Warden Class Changes:
-        Perk Changes:
-            < Energize and Inoculation have switched slots.
-            < Energize now only applies to damage instance at least 8.
-
-        Item Changes:
-            < Fixed Double Barrel dealing too much damage as intended and added back knockback boost.
-            < Reworked Weapon: SPAS12 (arccw_horde_spas12)
-
-        -- Cremator Class Changes:
-        Perk Changes:
-            < Reduced passive Fire damage resistance.
-            < Entropy Shield effect changed.
-
-        Item Changes:
-            < Increased price of some weapons.
-
-        -- Berserker Class Changes:
-        Item Changes:
-            < New Gadget: Omnislash (gadget_omnislash)]]
-    local mt = multlinetext(update_text, update_text_panel:GetWide() - 50, 'Content')
-    update_text_panel.Paint = function ()
-        draw.SimpleText("Major Update 1.2.1", 'LargeTitle', 50, 50, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-        draw.DrawText(mt, 'Content', 100, 150, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-    end
 
     local debuff_text_panel = vgui.Create("DPanel", description_panel)
     debuff_text_panel:SetSize(self:GetParent():GetWide(), 900)
@@ -411,7 +306,7 @@ function PANEL:Init()
 
     local damage_text_panel = vgui.Create("DPanel", description_panel)
     damage_text_panel:SetSize(self:GetParent():GetWide(), 1200)
-    damage_text_panel:SetVisible(false)
+    damage_text_panel:SetVisible(true)
     damage_text_panel.Paint = function ()
         local mat = Material(HORDE.DMG_TYPE_ICON[HORDE.DMG_BALLISTIC], "mips smooth")
         surface.SetMaterial(mat)
@@ -694,7 +589,7 @@ function PANEL:Init()
                 self.mechanic_btns[btn] = 0
             end
             self.mechanic_btns[mechanic_btn] = 1
-            update_text_panel:SetVisible(false)
+            --update_text_panel:SetVisible(false)
             damage_text_panel:SetVisible(false)
             debuff_text_panel:SetVisible(false)
             enemies_text_panel:SetVisible(false)
@@ -717,7 +612,7 @@ function PANEL:Init()
         return mechanic_btn
     end
 
-    self.create_mechanic_btn("Latest Update", update_text_panel)
+    --self.create_mechanic_btn("Latest Update", update_text_panel)
     self.create_mechanic_btn("Damage Types", damage_text_panel)
     self.create_mechanic_btn("Debuff Status Effects", debuff_text_panel)
     if GetConVarNumber("horde_default_enemy_config") == 1 then
