@@ -161,37 +161,6 @@ function PANEL:Init()
             draw.SimpleText(map, "Content", 10, 20, Color(255,255,255), TEXT_ALIGN_LEFT)
         end
 
-        local num_label = vgui.Create("DLabel", map_btn)
-        num_label:Dock(RIGHT)
-        num_label:SetText("")
-        num_label:SetSize(35, 80)
-        num_label:SetColor(Color(255,255,255))
-        num_label:SetFont("Content")
-        local count = achievements[map]["completion_count"]
-        local completion = nil
-        if count then
-            if count >= 4 then
-                completion = "bronze"
-            elseif count >= 7 then
-                completion = "silver"
-            elseif count >= 9 then
-                completion = "gold"
-            end
-        end
-        num_label.Paint = function ()
-            surface.SetMaterial(Material("trophy.png", "mips smooth"))
-            if completion == "bronze" then
-                surface.SetDrawColor(Color(205,127,50))
-            elseif completion == "silver" then
-                surface.SetDrawColor(Color(192,192,192))
-            elseif completion == "gold" then
-                surface.SetDrawColor(Color(255,215,0))
-            else
-                return
-            end
-            surface.DrawTexturedRect(0, 18, 25, 25)
-        end
-
         self.map_btns[map_btn] = 0
     end
 
