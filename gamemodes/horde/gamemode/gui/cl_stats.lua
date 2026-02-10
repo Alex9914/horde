@@ -799,6 +799,14 @@ function PANEL:Init()
             draw.RoundedBox(0, 0, 0, 250, 50, HORDE.color_hollow)
         end
     end
+    stats_btn.OnCursorEntered = function ()
+        surface.PlaySound("UI/buttonrollover.wav")
+        stats_hovered = true
+    end
+    stats_btn.OnCursorExited = function ()
+        surface.PlaySound("UI/buttonrollover.wav")
+        stats_hovered = false
+    end
 
     local achievements_btn = vgui.Create("DButton", self)
     local achievements_activated = false
@@ -815,6 +823,14 @@ function PANEL:Init()
         else
             draw.RoundedBox(0, 0, 0, 250, 50, HORDE.color_hollow)
         end
+    end
+    achievements_btn.OnCursorEntered = function ()
+        surface.PlaySound("UI/buttonrollover.wav")
+        achievements_hovered = true
+    end
+    achievements_btn.OnCursorExited = function ()
+        surface.PlaySound("UI/buttonrollover.wav")
+        achievements_hovered = false
     end
 
     local learn_btn = vgui.Create("DButton", self)
@@ -833,6 +849,14 @@ function PANEL:Init()
             draw.RoundedBox(0, 0, 0, 250, 50, HORDE.color_hollow)
         end
     end
+    learn_btn.OnCursorEntered = function ()
+        surface.PlaySound("UI/buttonrollover.wav")
+        learn_hovered = true
+    end
+    learn_btn.OnCursorExited = function ()
+        surface.PlaySound("UI/buttonrollover.wav")
+        learn_hovered = false
+    end
 
     stats_btn.DoClick = function ()
         stats_activated = true
@@ -844,16 +868,6 @@ function PANEL:Init()
         surface.PlaySound("UI/buttonclick.wav")
     end
 
-    stats_btn.OnCursorEntered = function ()
-        surface.PlaySound("UI/buttonrollover.wav")
-        stats_hovered = true
-    end
-
-    stats_btn.OnCursorExited = function ()
-        surface.PlaySound("UI/buttonrollover.wav")
-        stats_hovered = false
-    end
-
     achievements_btn.DoClick = function ()
         achievements_activated = true
         stats_activated = nil
@@ -862,16 +876,6 @@ function PANEL:Init()
         stats_panel:SetVisible(false)
         learn_panel:SetVisible(false)
         surface.PlaySound("UI/buttonclick.wav")
-    end
-
-    achievements_btn.OnCursorEntered = function ()
-        surface.PlaySound("UI/buttonrollover.wav")
-        achievements_hovered = true
-    end
-
-    achievements_btn.OnCursorExited = function ()
-        surface.PlaySound("UI/buttonrollover.wav")
-        achievements_hovered = false
     end
 
     learn_btn.DoClick = function ()
@@ -903,6 +907,14 @@ function PANEL:Init()
     discord_btn.DoClick = function ()
         gui.OpenURL("https://discord.gg/npc")
     end
+    discord_btn.OnCursorEntered = function ()
+        surface.PlaySound("UI/buttonrollover.wav")
+        discord_hovered = true
+    end
+    discord_btn.OnCursorExited = function ()
+        surface.PlaySound("UI/buttonrollover.wav")
+        discord_hovered = false
+    end
 
     local donate_btn = vgui.Create("DButton", self)
     local donate_activated = false
@@ -923,32 +935,10 @@ function PANEL:Init()
     donate_btn.DoClick = function ()
         gui.OpenURL("https://store.zmod.gg/")
     end
-
-    learn_btn.OnCursorEntered = function ()
-        surface.PlaySound("UI/buttonrollover.wav")
-        learn_hovered = true
-    end
-
-    learn_btn.OnCursorExited = function ()
-        surface.PlaySound("UI/buttonrollover.wav")
-        learn_hovered = false
-    end
-
-    discord_btn.OnCursorEntered = function ()
-        surface.PlaySound("UI/buttonrollover.wav")
-        discord_hovered = true
-    end
-
-    discord_btn.OnCursorExited = function ()
-        surface.PlaySound("UI/buttonrollover.wav")
-        discord_hovered = false
-    end
-
     donate_btn.OnCursorEntered = function ()
         surface.PlaySound("UI/buttonrollover.wav")
         donate_hovered = true
     end
-
     donate_btn.OnCursorExited = function ()
         surface.PlaySound("UI/buttonrollover.wav")
         donate_hovered = false
