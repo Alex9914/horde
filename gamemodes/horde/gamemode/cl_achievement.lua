@@ -1,323 +1,146 @@
-local EXPECTED_HEADER = "HordeAchievements"
+-- HORDE Achievements System (Global + Per Map)
+HORDE.MapAchievements = HORDE.MapAchievements or {}
+HORDE.GlobalAchievements = HORDE.GlobalAchievements or {}
 
-HORDE.achievements_map = {}
-HORDE.achievemnts_class = {}
+local ACH_PATH = "zmod_horde/achievements.json"
+local DEFAULT_MAP = "z_default" -- To store created achievements to copy from
+local CURRENT_MAP = game.GetMap() or "unknown"
 
-local path
-local strm
+-- Create a new global achievement
+function HORDE:CreateGlobalAchievement( id, cat, title, desc )
+    if not id or not cat or not desc then return end
 
-hook.Add("InitPostEntity", "Horde_PlayerInitAchievements", function()
-    MySelf = LocalPlayer()
-    EXPECTED_HEADER = util.SHA256("HordeAchievements" .. MySelf:SteamID())
-    HORDE:CheckUpdate()
-end)
+    HORDE.GlobalAchievements[id] = {
+        cat = cat,
+        title = title,
+        desc = desc,
+        unlocked = false
+    }
+end
 
-HORDE.MapAchievements = {
-    normal = "Normal Completion",
-    hard = "Hard Completion",
-    realism = "Realism Completion",
-    nightmare = "Nightmare Completion",
-    apocalypse = "Apocalpyse Completion",
-    coop = "Coop Completion",
-    horde = "Horde Completion",
-    hardcore_horde = "Hardcore Completion",
-    coop_horde = "Coop Horde Completion",
-    hardcore_coop_horde = "Hardcore Coop Completion",
-    endless_20 = "Endless Wave 20",
-    endless_30 = "Endless Wave 30",
-}
+-- Create a new map-specific achievement stored in _default
+function HORDE:CreateMapAchievement( id, cat, title, desc )
+    if not id or not cat or not desc then return end
 
-HORDE.MapAchievement_Descriptions = {
-    [HORDE.MapAchievements.normal] = "Complete 10 waves on NORMAL difficulty.",
-    [HORDE.MapAchievements.hard] = "Complete 10 waves on HARD difficulty.",
-    [HORDE.MapAchievements.realism] = "Complete 10 waves on REALISM difficulty.",
-    [HORDE.MapAchievements.nightmare] = "Complete 10 waves on NIGHTMARE difficulty.",
-    [HORDE.MapAchievements.apocalypse] = "Complete 10 waves on APOCALYPSE difficulty.",
-    [HORDE.MapAchievements.coop] = "Complete 10 waves with at least 4 players.",
-    [HORDE.MapAchievements.horde] = "Complete 10 waves on NIGHTMARE difficulty with default config and settings.",
-    [HORDE.MapAchievements.coop_horde] = "Complete 10 waves on NIGHTMARE difficulty with at least 4 players, default config and settings.",
-    [HORDE.MapAchievements.hardcore_horde] = "Complete 10 waves on APOCALYPSE difficulty with default config and settings.",
-    [HORDE.MapAchievements.hardcore_coop_horde] = "Complete 10 waves on APOCALYPSE difficulty with at least 4 players, default config and settings.",
-    [HORDE.MapAchievements.endless_20] = "Complete 20 waves on Endless mode.",
-    [HORDE.MapAchievements.endless_30] = "Complete 30 waves on Endless mode.",
-}
+    HORDE.MapAchievements[DEFAULT_MAP] = HORDE.MapAchievements[DEFAULT_MAP] or {}
+    HORDE.MapAchievements[DEFAULT_MAP][id] = {
+        cat = cat,
+        title = title,
+        desc = desc,
+        unlocked = false
+    }
+end
 
-function HORDE:GetMapAchievements(map)
-    local count = 0
-    local stats = HORDE.achievements_map[map]
-    if not stats then return end
-    local achievements = {}
-    if stats.players and stats.players >= 4 then
-        achievements[HORDE.MapAchievements.coop] = true
-        count = count + 1
+local function createAchievements()
+    HORDE:CreateMapAchievement( "win_casual", "difficulty", "Casual Player", "Win on Casual or higher difficulty." )
+    HORDE:CreateMapAchievement( "win_easy", "difficulty", "Getting the Hang of It", "Win on Easy or higher difficulty." )
+    HORDE:CreateMapAchievement( "win_medium", "difficulty", "Seasoned Fighter", "Win on Medium or higher difficulty." )
+    HORDE:CreateMapAchievement( "win_hard", "difficulty", "Hard-Fought Victory", "Win on Hard or higher difficulty." )
+    HORDE:CreateMapAchievement( "win_veteran", "difficulty", "Against the Odds", "Win on Veteran Difficulty." )
+    HORDE:CreateMapAchievement( "win_elite_rush", "difficulty", "Elite Hunter", "Win on Elite-Rush Difficulty." )
+
+    HORDE:CreateGlobalAchievement( "first_win", "milestone", "Newbie's First Win", "Complete your first game." )
+end
+
+local function fillEmptyMap( map )
+    local from = HORDE.MapAchievements[DEFAULT_MAP]
+
+    HORDE.MapAchievements[map] = {}
+    local to = HORDE.MapAchievements[map]
+
+    table.CopyFromTo( from, to )
+
+    return HORDE.MapAchievements[map]
+end
+
+function HORDE:LoadAchievements()
+    if not file.Exists( ACH_PATH, "DATA" ) then return end
+
+    local data = file.Read( ACH_PATH, "DATA" )
+    if not data then return end
+
+    local saved = util.JSONToTable( data ) or {}
+    local savedGlobal = saved.GlobalAchievements
+    local savedMap = saved.MapAchievements
+
+    if savedGlobal then
+        for id, ach in pairs( HORDE.GlobalAchievements ) do
+            if savedGlobal[id] and savedGlobal[id].unlocked ~= nil then
+                ach.unlocked = savedGlobal[id].unlocked
+            end
+        end
     end
-    if stats.diffculty and stats.diffculty >= 1 then
-        achievements[HORDE.MapAchievements.normal] = true
-        count = count + 1
-        if stats.diffculty >= 2 then
-            achievements[HORDE.MapAchievements.hard] = true
-            count = count + 1
-            if stats.diffculty >= 3 then
-                achievements[HORDE.MapAchievements.realism] = true
-                count = count + 1
-                if stats.diffculty >= 4 then
-                    achievements[HORDE.MapAchievements.nightmare] = true
-                    count = count + 1
-                    if stats.diffculty >= 5 then
-                        achievements[HORDE.MapAchievements.apocalypse] = true
-                        count = count + 1
-                        if stats.config >= 1 then
-                            achievements[HORDE.MapAchievements.hardcore_horde] = true
-                            count = count + 1
-                            if stats.players_apocalypse and stats.players_apocalypse >= 4 then
-                                achievements[HORDE.MapAchievements.hardcore_coop_horde] = true
-                                count = count + 1
-                            end
-                        end
-                    end
-                    if stats.config >= 1 then
-                        achievements[HORDE.MapAchievements.horde] = true
-                        count = count + 1
-                        if stats.players_nightmare and stats.players_nightmare >= 4 then
-                            achievements[HORDE.MapAchievements.coop_horde] = true
-                            count = count + 1
-                        end
-                    end
+
+    if savedMap then
+        for map, achi in pairs( savedMap ) do
+            for id, ach in pairs( fillEmptyMap( map ) ) do
+                if achi[id] and achi[id].unlocked ~= nil then
+                    ach.unlocked = achi[id].unlocked
                 end
             end
         end
     end
-    if stats.wave and stats.wave >= 20 then
-        achievements[HORDE.Achievements.endless_20] = true
-        count = count + 1
-        if stats.wave >= 30 then
-            achievements[HORDE.Achievements.endless_30] = true
-            count = count + 1
-        end
+end
+
+function HORDE:SaveAchievements()
+    if not file.IsDir( "zmod_horde", "DATA" ) then
+        file.CreateDir( "zmod_horde", "DATA" )
     end
 
-    -- get extra achievements
-    local extra = stats.extra
-    if extra then
-        for extra_achievement, achieved in pairs(extra) do
-            if achieved == 1 and not achievements[extra_achievement] then
-                achievements[extra_achievement] = true
-                count = count + 1
+    local saveData = {
+        MapAchievements = {},
+        GlobalAchievements = {}
+    }
+
+    for map, achi in pairs( HORDE.MapAchievements ) do
+        if map ~= DEFAULT_MAP then
+            saveData.MapAchievements[map] = {}
+            for id, ach in pairs( achi ) do
+                saveData.MapAchievements[map][id] = {}
+                saveData.MapAchievements[map][id].unlocked = ach.unlocked
             end
         end
     end
 
-    achievements["completion_count"] = count
-    return achievements
+    for id, ach in pairs( HORDE.GlobalAchievements ) do
+        saveData.GlobalAchievements[id] = {}
+        saveData.GlobalAchievements[id].unlocked = ach.unlocked
+    end
+
+    file.Write( ACH_PATH, util.TableToJSON( saveData ) )
 end
 
-function HORDE:SaveMapAchievements()
-    if HORDE.current_wave < 10 then return end
-    local map = game.GetMap()
-    local ply = MySelf
-    if not ply:IsValid() then return end
+function HORDE:GiveMapAchievement( id )
+    HORDE.MapAchievements[CURRENT_MAP] = HORDE.MapAchievements[CURRENT_MAP] or {}
 
-    if not file.IsDir("horde/achievements/", "DATA") then
-        file.CreateDir("horde/achievements/", "DATA")
-    end
+    local ach = HORDE.MapAchievements[CURRENT_MAP][id]
+    if not ach or ach.unlocked then return end
 
-    if not HORDE.achievements_map[map] then
-        HORDE.achievements_map[map] = {}
-    end
-
-    local old_achievements = HORDE:GetMapAchievements(map)
-    local count_old = old_achievements["completion_count"]
-    if HORDE.achievements_map[map] then
-        HORDE.achievements_map[map].diffculty = HORDE.achievements_map[map].diffculty or -1
-        HORDE.achievements_map[map].players = HORDE.achievements_map[map].players or 0
-        HORDE.achievements_map[map].config = HORDE.achievements_map[map].config or 0
-        HORDE.achievements_map[map].wave = HORDE.achievements_map[map].wave or 0
-        HORDE.achievements_map[map].extra = HORDE.achievements_map[map].extra or {}
-        HORDE.achievements_map[map].players_nightmare = HORDE.achievements_map[map].players_nightmare or 0
-        HORDE.achievements_map[map].players_apocalypse = HORDE.achievements_map[map].players_apocalypse or 0
-
-
-        HORDE.achievements_map[map].diffculty = math.max(HORDE.achievements_map[map].diffculty, HORDE.CurrentDifficulty)
-        HORDE.achievements_map[map].players = math.max(HORDE.achievements_map[map].players, #player.GetHumans())
-        if HORDE.CurrentDifficulty >= 4 then
-            HORDE.achievements_map[map].players_nightmare = math.max(HORDE.achievements_map[map].players_nightmare, #player.GetHumans())
-        end
-        if HORDE.CurrentDifficulty >= 5 then
-            HORDE.achievements_map[map].players_apocalypse = math.max(HORDE.achievements_map[map].players_apocalypse, #player.GetHumans())
-        end
-        if GetConVarNumber("horde_default_item_config") == 1
-        and GetConVarNumber("horde_default_class_config") == 1
-        and GetConVarNumber("horde_default_enemy_config") == 1
-        and GetConVarNumber("horde_start_money") <= 1000
-        and GetConVarNumber("horde_round_bonus") <= 500
-        and GetConVarNumber("horde_base_walkspeed") <= 180
-        and GetConVarNumber("horde_base_runspeed") <= 220
-        and GetConVarNumber("horde_base_jumpheight") <= 150 then
-            HORDE.achievements_map[map].config = 1
-        else
-            HORDE.achievements_map[map].config = math.max(0, HORDE.achievements_map[map].config)
-        end
-        HORDE.achievements_map[map].wave = math.max(HORDE.achievements_map[map].wave, HORDE.current_wave)
-    end
-
-    -- Grab extra achievements
-    local achievements = ents.FindByClass("logic_horde_achievement")
-    local extra = {}
-    for _, ent in pairs(achievements) do
-        if ent.Achievement and ent.Achievement ~= "" then
-            extra[ent.Achievement] = HORDE.achievements_map[map].extra[ent.Achievement] or 0
-            if ent.Description then
-                HORDE.MapAchievement_Descriptions[ent.Achievement] = ent.Description
-            end
-        end
-    end
-
-    HORDE.achievements_map[map].extra = extra
-
-    path = "horde/achievements/maps.txt"
-
-    strm = file.Open(path, "wb", "DATA" )
-        strm:Write(EXPECTED_HEADER)
-        strm:Write(util.TableToJSON(HORDE.achievements_map))
-    strm:Close()
-
-    local new_achievements = HORDE:GetMapAchievements(map)
-    local count_new = new_achievements["completion_count"]
-    if count_new > count_old then
-        local str = "You have unlocked new achievements for " .. map .. "! Press F2 to view."
-        HORDE:PlayNotification(str)
-    end
+    ach.unlocked = true
+    HORDE:SaveAchievements()
 end
 
-function HORDE:ActivateExtraMapAchievement(map, achievement)
-    HORDE:LoadMapAchievements()
-    if HORDE.achievements_map[map].extra[achievement] and HORDE.achievements_map[map].extra[achievement] == 1 then return end
-    HORDE.achievements_map[map].extra[achievement] = 1
-    HORDE:SaveMapAchievements()
+function HORDE:GiveGlobalAchievement( id )
+    local ach = HORDE.GlobalAchievements[id]
+    if not ach or ach.unlocked then return end
+
+    ach.unlocked = true
+    HORDE:SaveAchievements()
 end
 
-HORDE.has_new_update = nil
-function HORDE:CheckUpdate()
-    path = "horde/achievements/update.txt"
-    if not file.IsDir("horde/achievements/", "DATA") then
-        file.CreateDir("horde/achievements/", "DATA")
-        HORDE.has_new_update = true
-        RunConsoleCommand("horde_stats")
-        strm = file.Open(path, "wb", "DATA" )
-            strm:Write(HORDE.version)
-        strm:Close()
-        return
-    end
-
-    if file.Exists(path, "DATA") == false then
-        HORDE.has_new_update = true
-        RunConsoleCommand("horde_stats")
-        strm = file.Open(path, "wb", "DATA" )
-            strm:Write(HORDE.version)
-        strm:Close()
-    else
-        strm = file.Open(path, "rb", "DATA" )
-        local header = strm:Read(#HORDE.version)
-        if header ~= HORDE.version then
-            HORDE.has_new_update = true
-            RunConsoleCommand("horde_stats")
-            strm:Close()
-
-            strm = file.Open(path, "wb", "DATA" )
-                strm:Write(HORDE.version)
-            strm:Close()
-        end
-        strm:Close()
-    end
+function HORDE:GetMapAchievements()
+    return HORDE.GlobalAchievements
 end
 
-function HORDE:SaveClassAchievemnts()
-    local class = ply:Horde_GetClass().name
-    local difficulty = HORDE.CurrentDifficulty
-    local ply = MySelf
-    if not ply:IsValid() then return end
-
-    if not file.IsDir("horde/achievements/classes", "DATA") then
-        file.CreateDir("horde/achievements/classes", "DATA")
-    end
-
-    if HORDE.achievemnts_class[class] then
-        if HORDE.achievemnts_class[class][difficulty] then return end
-        HORDE.achievemnts_class[class][difficulty] = true
-    else
-        HORDE.achievemnts_class[class] = {}
-        HORDE.achievemnts_class[class][difficulty] = true
-    end
-
-    path = "horde/achievements/classes.txt"
-
-    strm = file.Open(path, "wb", "DATA" )
-        strm:Write(EXPECTED_HEADER)
-        strm:WriteString(util.TableToJSON(HORDE.achievemnts_class))
-    strm:Close()
+function HORDE:GetGlobalAchievements()
+    return HORDE.GlobalAchievements
 end
 
-function HORDE:LoadMapAchievements()
-    local ply = MySelf
-    if not ply:IsValid() then return end
+hook.Add( "Initialize", "Horde_LoadAchievements", function()
+    createAchievements()
+    HORDE:LoadAchievements()
+end )
 
-    if not file.IsDir("horde/achievements/", "DATA") then
-        file.CreateDir("horde/achievements/", "DATA")
-        return
-    end
-
-    path = "horde/achievements/maps.txt"
-    if file.Exists(path, "DATA") == false then
-        strm = file.Open(path, "wb", "DATA" )
-            strm:Write(EXPECTED_HEADER)
-            strm:Write(util.TableToJSON(HORDE.achievements_map))
-        strm:Close()
-    end
-
-    strm = file.Open(path, "rb", "DATA" )
-        local header = strm:Read(#EXPECTED_HEADER)
-        local f = strm:Read()
-        if header == EXPECTED_HEADER then
-            if f then
-                HORDE.achievements_map = util.JSONToTable(f)
-            end
-        else
-            HORDE.achievements_map = {}
-            HORDE.achievements_map[game.GetMap()] = {}
-            HORDE.achievements_map[game.GetMap()]["extra"] = {}
-        end
-    strm:Close()
-end
-
-function HORDE:LoadClassAchievements()
-    local ply = MySelf
-    if not ply:IsValid() then return end
-
-    if not file.IsDir("horde/achievements/classes", "DATA") then
-        file.CreateDir("horde/achievements/classes", "DATA")
-        return
-    end
-
-    path = "horde/achievements/classes" .. HORDE:ScrubSteamID(ply) .. ".txt"
-
-    strm = file.Open(path, "wb", "DATA" )
-        local header = strm:Read(EXPECTED_HEADER)
-        if header == EXPECTED_HEADER then
-            HORDE.achievemnts_class = util.JSONToTable(strm:ReadString())
-        else
-            return
-        end
-    strm:Close()
-end
-
-net.Receive("Horde_SaveAchievements", function ()
-    HORDE:LoadMapAchievements()
-    HORDE:SaveMapAchievements()
-    --HORDE:SaveClassAchievemnts()
-end)
-
-net.Receive("Horde_SaveExtraAchievements", function ()
-    local achievement = net.ReadString()
-    HORDE:ActivateExtraMapAchievement(game.GetMap(), achievement)
-    --HORDE:SaveClassAchievemnts()
-end)
+net.Receive( "Horde_SaveAchievements", function ()
+    HORDE:SaveAchievements()
+end )
