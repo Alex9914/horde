@@ -163,7 +163,7 @@ function PANEL:Init()
                 achievements[map]["completion_count"] = 0
             end
 
-            for _, ach in pairs(achievements[map]) do
+            for _, ach in pairs(HORDE:GetSortedMapAchievements(map)) do
                 self.create_map_achievement_btn(map, ach.title, ach.desc, ach.unlocked)
             end
         end

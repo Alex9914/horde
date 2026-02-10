@@ -1,4 +1,3 @@
--- HORDE Achievements System (Global + Per Map)
 HORDE.MapAchievements = HORDE.MapAchievements or {}
 HORDE.GlobalAchievements = HORDE.GlobalAchievements or {}
 
@@ -6,29 +5,35 @@ local ACH_PATH = "zmod_horde/achievements.json"
 local DEFAULT_MAP = "z_default" -- To store created achievements to copy from
 local CURRENT_MAP = game.GetMap() or "unknown"
 
--- Create a new global achievement
+local globalAchOrder = 1
 function HORDE:CreateGlobalAchievement( id, cat, title, desc )
     if not id or not cat or not desc then return end
 
     HORDE.GlobalAchievements[id] = {
+        order = globalAchOrder,
         cat = cat,
         title = title,
         desc = desc,
         unlocked = false
     }
+
+    globalAchOrder = globalAchOrder + 1
 end
 
--- Create a new map-specific achievement stored in _default
+local mapAchOrder = 1
 function HORDE:CreateMapAchievement( id, cat, title, desc )
     if not id or not cat or not desc then return end
 
     HORDE.MapAchievements[DEFAULT_MAP] = HORDE.MapAchievements[DEFAULT_MAP] or {}
     HORDE.MapAchievements[DEFAULT_MAP][id] = {
+        order = mapAchOrder,
         cat = cat,
         title = title,
         desc = desc,
         unlocked = false
     }
+
+    mapAchOrder = mapAchOrder + 1
 end
 
 local function createAchievements()
@@ -39,6 +44,8 @@ local function createAchievements()
     HORDE:CreateMapAchievement( "win_veteran", "difficulty", "Against the Odds", "Win on Veteran Difficulty." )
     HORDE:CreateMapAchievement( "win_elite_rush", "difficulty", "Elite Hunter", "Win on Elite-Rush Difficulty." )
 
+    HORDE:CreateGlobalAchievement( "second_win", "milestone", "Newbie's First Win", "Complete your first game." )
+    HORDE:CreateGlobalAchievement( "third_win", "milestone", "Newbie's First Win", "Complete your first game." )
     HORDE:CreateGlobalAchievement( "first_win", "milestone", "Newbie's First Win", "Complete your first game." )
 end
 
@@ -128,12 +135,32 @@ function HORDE:GiveGlobalAchievement( id )
     HORDE:SaveAchievements()
 end
 
-function HORDE:GetMapAchievements()
-    return HORDE.GlobalAchievements
+function HORDE:GetSortedMapAchievements( map )
+    local sorted = {}
+
+    for _, ach in pairs( HORDE.MapAchievements[map] ) do
+        table.insert( sorted, ach )
+    end
+
+    table.sort( sorted, function( a, b )
+        return a.order < b.order
+    end )
+
+    return sorted
 end
 
-function HORDE:GetGlobalAchievements()
-    return HORDE.GlobalAchievements
+function HORDE:GetSortedGlobalAchievements()
+    local sorted = {}
+
+    for _, ach in pairs( HORDE.GlobalAchievements ) do
+        table.insert( sorted, ach )
+    end
+
+    table.sort( sorted, function( a, b )
+        return a.order < b.order
+    end )
+
+    return sorted
 end
 
 hook.Add( "Initialize", "Horde_LoadAchievements", function()
@@ -144,3 +171,8 @@ end )
 net.Receive( "Horde_SaveAchievements", function ()
     HORDE:SaveAchievements()
 end )
+
+concommand.Add("horde_testing_manual_achievement_load", function()
+    createAchievements()
+    HORDE:LoadAchievements()
+end)
