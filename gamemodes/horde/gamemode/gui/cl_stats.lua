@@ -1,13 +1,6 @@
 local PANEL = {}
 
-local function GetImmune(status)
-    if HORDE:GetStat(status) == 0 then
-        return "NO"
-    else
-        return "YES"
-    end
-end
-
+--[[
 local function multlinetext(text, maxw, font)
     local content = ""
     local tline = ""
@@ -38,8 +31,7 @@ local function multlinetext(text, maxw, font)
         x = 0
     end
     return content
-end
-
+end]]
 
 local function drawStat(self, header, stat, x, y, mat, col)
     surface.SetMaterial(mat)
