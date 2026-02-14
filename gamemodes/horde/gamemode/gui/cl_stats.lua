@@ -732,12 +732,12 @@ function PANEL:Init()
         drawStatResistance(self, "Blunt Resistance:", HORDE.DMG_BLUNT, 100, 200, HORDE.DMG_TYPE_ICON, HORDE.DMG_COLOR)
         drawStatResistance(self, "Other:", HORDE.DMG_PHYSICAL, 100, 250, HORDE.DMG_TYPE_ICON, HORDE.DMG_COLOR)
 
-        draw.SimpleText("Elemental Resistances", 'Heading', 50, 350, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-        drawStatResistance(self, "Fire Resistance:", HORDE.DMG_FIRE, 100, 400, HORDE.DMG_TYPE_ICON, HORDE.DMG_COLOR)
-        drawStatResistance(self, "Cold Resistance:", HORDE.DMG_COLD, 100, 450, HORDE.DMG_TYPE_ICON, HORDE.DMG_COLOR)
-        drawStatResistance(self, "Lightning Resistance:", HORDE.DMG_LIGHTNING, 100, 500, HORDE.DMG_TYPE_ICON, HORDE.DMG_COLOR)
-        drawStatResistance(self, "Poison Resistance:", HORDE.DMG_POISON, 100, 550, HORDE.DMG_TYPE_ICON, HORDE.DMG_COLOR)
-        drawStatResistance(self, "Blast Resistance:", HORDE.DMG_BLAST, 100, 600, HORDE.DMG_TYPE_ICON, HORDE.DMG_COLOR)
+        draw.SimpleText("Elemental Resistances", 'Heading', 50, 320, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        drawStatResistance(self, "Fire Resistance:", HORDE.DMG_FIRE, 100, 370, HORDE.DMG_TYPE_ICON, HORDE.DMG_COLOR)
+        drawStatResistance(self, "Cold Resistance:", HORDE.DMG_COLD, 100, 420, HORDE.DMG_TYPE_ICON, HORDE.DMG_COLOR)
+        drawStatResistance(self, "Lightning Resistance:", HORDE.DMG_LIGHTNING, 100, 470, HORDE.DMG_TYPE_ICON, HORDE.DMG_COLOR)
+        drawStatResistance(self, "Poison Resistance:", HORDE.DMG_POISON, 100, 520, HORDE.DMG_TYPE_ICON, HORDE.DMG_COLOR)
+        drawStatResistance(self, "Blast Resistance:", HORDE.DMG_BLAST, 100, 570, HORDE.DMG_TYPE_ICON, HORDE.DMG_COLOR)
     end
 
     local res_stats_panel_right = vgui.Create("DPanel", stats_panel)
