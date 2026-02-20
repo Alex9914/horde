@@ -47,6 +47,7 @@ local dmginfo_SetDamage = dmginfoMeta.SetDamage
 local dmginfo_SetAttacker = dmginfoMeta.SetAttacker
 local dmginfo_SetInflictor = dmginfoMeta.SetInflictor
 local dmginfo_SetDamageType = dmginfoMeta.SetDamageType
+local dmginfo_SetDamagePosition = dmginfoMeta.SetDamagePosition
 
 local EffectData = EffectData
 local effectDataMeta = FindMetaTable( "CEffectData" )
@@ -96,6 +97,7 @@ function ENT:Think()
         dmginfo_SetAttacker( dmginfo, self )
         dmginfo_SetInflictor( dmginfo, self )
         dmginfo_SetDamageType( dmginfo, DMG_ACID )
+        dmginfo_SetDamagePosition( dmginfo, pos )
 
         for i = #entities, 1, -1 do
             local ent = entities[i]
