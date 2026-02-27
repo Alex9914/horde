@@ -138,22 +138,6 @@ local function DrawBuildup(status, buildup, x, y)
     surface.DrawTexturedRect(5 + x, 5 + y, 30, 30)
 end
 
-local function DrawProgress(status, buildup, x, y)
-    if buildup <= 0 then return end
-    local mat
-    local color = Color(0, 255, 0)
-
-    draw.RoundedBox(5, x + 50, y + 10, 200, 15, Color(40,40,40,200))
-    draw.RoundedBox(5, x + 50, y + 10, 200 * buildup / 100, 15, color)
-    draw.RoundedBox(10, x, y, 40, 40, Color(40,40,40,200))
-
-    mat = Material(HORDE.Status_Icon[status], "mips smooth")
-
-    surface.SetMaterial(mat)
-    surface.SetDrawColor(color_white)
-    surface.DrawTexturedRect(5 + x, 5 + y, 30, 30)
-end
-
 local status_panel = vgui.Create("DPanel")
 status_panel:SetSize(ScreenScale(125), ScreenScale(25))
 status_panel:SetPos(ScreenScale(6), ScreenScale(40))
