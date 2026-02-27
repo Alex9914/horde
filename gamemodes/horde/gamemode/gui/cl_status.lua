@@ -756,23 +756,22 @@ function HORDE:PlayXPNotification(diff, label)
     end
 end
 
--- Override health, armor and ammo
-if ArcCW then
+if ArcCWInstalled then
+    -- Override health, armor and ammo
     function ArcCW:ShouldDrawHUDElement(ele)
         if ele == "CHudHealth" then return false end
         if ele == "CHudBattery" then return false end
         if ele == "CHudAmmo" then return false end
         return true
     end
-end
 
-if ArcCWInstalled then
     -- Use our own health display
     timer.Simple(0, function ()
         ArcCW.HUDElementConVars["CHudHealth"] = false
         ArcCW.HUDElementConVars["CHudBattery"] = false
     end)
 end
+
 net.Receive("Horde_GadgetStartCooldown", function()
     MySelf:Horde_SetGadgetInternalCooldown(net.ReadFloat())
 end)
