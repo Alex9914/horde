@@ -26,7 +26,7 @@ local status_color = {
     [HORDE.Status_HasPayload] = Color(0, 255, 0),
 }
 
-local function DrawTextWithShadow(text, font, x, y, col, align_x, align_y)
+local function drawTextWithShadow(text, font, x, y, col, align_x, align_y)
     if not col then col = color_white end
     if not align_x then align_x = TEXT_ALIGN_LEFT end
     if not align_y then align_y = TEXT_ALIGN_TOP end
@@ -414,7 +414,7 @@ hook.Add("HUDPaint", "Horde_DrawHud", function ()
         if math.Round(vhp) > 0 then
             draw.RoundedBox(4, barX, barY_hp, math.max(barW * hpPct, ScreenScale(1)), barH, hpColor)
         end
-        DrawTextWithShadow(math.Round(vhp) .. " / " .. maxhp, "HealthInfo2", barX + barW / 2, barY_hp + barH / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        drawTextWithShadow(math.Round(vhp) .. " / " .. maxhp, "HealthInfo2", barX + barW / 2, barY_hp + barH / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         surface.SetMaterial(hp)
         surface.SetDrawColor(hpColor)
         surface.DrawTexturedRect(barX + barW + ScreenScale(4), barY_hp + (barH - icon_s) / 2, icon_s, icon_s)
@@ -438,7 +438,7 @@ hook.Add("HUDPaint", "Horde_DrawHud", function ()
         if math.Round(secVal) > 0 then
             draw.RoundedBox(4, barX, barY_sec, math.max(barW * secPct, ScreenScale(1)), barH, secColor)
         end
-        DrawTextWithShadow(math.Round(secVal) .. " / " .. secMax, "HealthInfo2", barX + barW / 2, barY_sec + barH / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        drawTextWithShadow(math.Round(secVal) .. " / " .. secMax, "HealthInfo2", barX + barW / 2, barY_sec + barH / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         surface.SetMaterial(secMat)
         surface.SetDrawColor(secColor)
         surface.DrawTexturedRect(barX + barW + ScreenScale(4), barY_sec + (barH - icon_s) / 2, icon_s, icon_s)
