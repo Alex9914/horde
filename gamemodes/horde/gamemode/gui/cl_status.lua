@@ -766,36 +766,34 @@ if ArcCW then
     end
 end
 
-if CLIENT then
-    if ArcCWInstalled then
-        -- Use our own health display
-        timer.Simple(0, function ()
-            ArcCW.HUDElementConVars["CHudHealth"] = false
-            ArcCW.HUDElementConVars["CHudBattery"] = false
-        end)
-    end
-    net.Receive("Horde_GadgetStartCooldown", function()
-        MySelf:Horde_SetGadgetInternalCooldown(net.ReadFloat())
-    end)
-
-    net.Receive("Horde_PerkStartCooldown", function ()
-        MySelf:Horde_SetPerkInternalCooldown(net.ReadUInt(8))
-        if MySelf:Horde_GetPerkInternalCooldown() <= 0 then return end
-        timer.Create("Horde_LocalPerkCooldown", 1, 0, function()
-            if MySelf:Horde_GetPerkInternalCooldown() <= 0 then timer.Remove("Horde_LocalPerkCooldown") return end
-            MySelf:Horde_SetPerkInternalCooldown(MySelf:Horde_GetPerkInternalCooldown() - 1)
-        end)
-    end)
-
-    net.Receive("Horde_GadgetChargesUpdate", function ()
-        MySelf:Horde_SetGadgetCharges(net.ReadInt(8))
-    end)
-
-    net.Receive("Horde_PerkChargesUpdate", function ()
-        MySelf:Horde_SetPerkCharges(net.ReadInt(8))
-    end)
-
-    net.Receive("Horde_RenderBarrier", function ()
-        MySelf.Horde_BarrierStack = net.ReadUInt(32)
+if ArcCWInstalled then
+    -- Use our own health display
+    timer.Simple(0, function ()
+        ArcCW.HUDElementConVars["CHudHealth"] = false
+        ArcCW.HUDElementConVars["CHudBattery"] = false
     end)
 end
+net.Receive("Horde_GadgetStartCooldown", function()
+    MySelf:Horde_SetGadgetInternalCooldown(net.ReadFloat())
+end)
+
+net.Receive("Horde_PerkStartCooldown", function ()
+    MySelf:Horde_SetPerkInternalCooldown(net.ReadUInt(8))
+    if MySelf:Horde_GetPerkInternalCooldown() <= 0 then return end
+    timer.Create("Horde_LocalPerkCooldown", 1, 0, function()
+        if MySelf:Horde_GetPerkInternalCooldown() <= 0 then timer.Remove("Horde_LocalPerkCooldown") return end
+        MySelf:Horde_SetPerkInternalCooldown(MySelf:Horde_GetPerkInternalCooldown() - 1)
+    end)
+end)
+
+net.Receive("Horde_GadgetChargesUpdate", function ()
+    MySelf:Horde_SetGadgetCharges(net.ReadInt(8))
+end)
+
+net.Receive("Horde_PerkChargesUpdate", function ()
+    MySelf:Horde_SetPerkCharges(net.ReadInt(8))
+end)
+
+net.Receive("Horde_RenderBarrier", function ()
+    MySelf.Horde_BarrierStack = net.ReadUInt(32)
+end)
