@@ -3,15 +3,13 @@ AddCSLuaFile( "shared.lua" )
 
 include( "shared.lua" )
 
-util.AddNetworkString( "WireframeRepair_UpdateProgress" )
-
 function ENT:Initialize()
     self:SetMoveType( MOVETYPE_VPHYSICS )
     self:SetSolid( SOLID_NONE )
     self:SetSolidFlags( FSOLID_TRIGGER )
     self:SetCollisionGroup( 0 )
 
-    self.RepairProgress = 0
+    self:SetNWFloat( "Horde_RepairProgress", 0 )
 end
 
 function ENT:SetClass( class )
@@ -19,14 +17,11 @@ function ENT:SetClass( class )
 end
 
 function ENT:Repair( amount )
-    self.RepairProgress = math.min( self.RepairProgress + amount, 100 )
+    local repairProgress = math.min( self:GetNWFloat( "Horde_RepairProgress", 0 ) + amount, 100 )
 
-    net.Start( "WireframeRepair_UpdateProgress" )
-        net.WriteEntity( self )
-        net.WriteFloat( self.RepairProgress )
-    net.Broadcast()
+    self:SetNWFloat( "Horde_RepairProgress", repairProgress )
 
-    if self.RepairProgress >= 100 then
+    if repairProgress >= 100 then
         self:Remove()
     end
 end
@@ -36,7 +31,7 @@ function ENT:Use()
 end
 
 function ENT:OnRemove()
-    if self.RepairProgress < 100 then return end
+    if self:GetNWFloat( "Horde_RepairProgress", 0 ) < 100 then return end
     if not self.TurretClass then return end
 
     local owner = self:GetOwner()

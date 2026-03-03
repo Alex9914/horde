@@ -1,19 +1,9 @@
 include( "shared.lua" )
 
 local wireframeMaterial = Material( "models/wireframe" )
-local repairProgressForEntity = {}
-
-net.Receive( "WireframeRepair_UpdateProgress", function()
-    local entity = net.ReadEntity()
-    local progress = net.ReadFloat()
-
-    if IsValid( entity ) then
-        repairProgressForEntity[entity] = progress
-    end
-end )
 
 function ENT:Draw()
-    local rawProgress = repairProgressForEntity[self]
+    local rawProgress = self:GetNWEntity( "Horde_RepairProgress", 0 )
 
     if rawProgress then
         rawProgress = rawProgress / 100
@@ -55,9 +45,5 @@ function ENT:Draw()
         render.PopCustomClipPlane()
         render.EnableClipping( enabled )
         render.MaterialOverride( nil )
-    end
-
-    if rawProgress == 1 then
-        repairProgressForEntity[entity] = nil
     end
 end
