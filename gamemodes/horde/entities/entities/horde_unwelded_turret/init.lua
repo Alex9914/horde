@@ -4,10 +4,12 @@ AddCSLuaFile( "shared.lua" )
 include( "shared.lua" )
 
 function ENT:Initialize()
+    self:PhysicsInit( SOLID_VPHYSICS )
+    self:SetSolid( SOLID_VPHYSICS )
     self:SetMoveType( MOVETYPE_VPHYSICS )
-    self:SetSolid( SOLID_NONE )
-    self:SetSolidFlags( FSOLID_TRIGGER )
-    self:SetCollisionGroup( 0 )
+    self:SetCollisionGroup( COLLISION_GROUP_WORLD )
+
+    self:SetUseType( SIMPLE_USE )
 
     self:SetNWFloat( "Horde_RepairProgress", 0 )
 end
@@ -26,9 +28,24 @@ function ENT:Repair( amount )
     end
 end
 
-function ENT:Use()
-    self:Repair( 2 )
+function ENT:Use( activator )
+    if activator ~= self:GetOwner() then return end
+    if activator.IsHoldingObject then return end
+
+    activator:PickupObject( self )
+
+    local phys = self:GetPhysicsObject()
+
+    if IsValid( phys ) then
+        phys:EnableMotion( true )
+    end
 end
+
+hook.Add( "OnPlayerPhysicsDrop", "Horde_TurretDrop", function( _, ent )
+    if ent:GetClass() == "horde_unwelded_turret" then
+        HORDE:DropTurret( ent )
+    end
+end )
 
 function ENT:OnRemove()
     if self:GetNWFloat( "Horde_RepairProgress", 0 ) < 100 then return end
