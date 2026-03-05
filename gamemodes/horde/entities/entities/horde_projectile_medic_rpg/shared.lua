@@ -22,6 +22,13 @@ ENT.TouchDamageTick = 0
 ENT.Ticks = 0
 ENT.TouchedEntities = {}
 
+hook.Add("Horde_ShouldCollide", "horde_projectile_medic_rpg", function(ent1, ent2)
+	local entClass = "horde_projectile_medic_rpg"
+	if ent1 == entClass or ent2 == entClass then
+		return true
+	end
+end)
+
 AddCSLuaFile()
 
 local entmeta = FindMetaTable("Entity")
