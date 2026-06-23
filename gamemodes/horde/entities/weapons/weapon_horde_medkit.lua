@@ -17,12 +17,12 @@ SWEP.UseHands = true
 
 SWEP.Primary.ClipSize = 100
 SWEP.Primary.DefaultClip = SWEP.Primary.ClipSize
-SWEP.Primary.Automatic = false
+SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = ""
 
 SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = -1
-SWEP.Secondary.Automatic = false
+SWEP.Secondary.Automatic = true
 SWEP.Secondary.Ammo = ""
 
 SWEP.HoldType = "slam"
@@ -65,7 +65,6 @@ function SWEP:Initialize()
 			PrimaryClip = 0
 		}
 	end
-
 end
 
 function SWEP:Deploy()
@@ -75,7 +74,6 @@ function SWEP:Deploy()
 	self:Regen( false )
 
 	return true
-
 end
 
 function SWEP:SetupDataTables()
@@ -114,7 +112,6 @@ function SWEP:SecondaryAttack()
 	if self:GetOwner():KeyDown( IN_RELOAD ) then return end
 
 	self:DoHeal( self:GetOwner() )
-
 end
 
 function SWEP:Reload()
@@ -124,11 +121,19 @@ function SWEP:Reload()
 	local closestPlayer = nil
 	local closestPos = nil
 	local closestDistance = math.huge
+	local owner = self:GetOwner()
+	local ownerClass = owner:Horde_GetCurrentSubclass()
+	local reviveSpeed = self.ReviveSpeed
+
+	if ownerClass == "Medic" or ownerClass == "Hatcher" then
+		reviveSpeed = 25
+	end
+
 	for ply, pos in pairs( self.DeadPlayers ) do
 		if not IsValid( ply ) then continue end
 		if ply:Alive() then continue end
 
-		local distance = pos:Distance( self:GetOwner():GetPos() )
+		local distance = pos:Distance( owner:GetPos() )
 		if distance < closestDistance then
 			closestDistance = distance
 			closestPlayer = ply
@@ -159,7 +164,7 @@ function SWEP:Reload()
 			return
 		end
 
-		self.ReviveProgress = self.ReviveProgress + self.ReviveSpeed * ( CurTime() - self.LastReviveTime )
+		self.ReviveProgress = self.ReviveProgress + reviveSpeed * ( CurTime() - self.LastReviveTime )
 		self.LastReviveTime = CurTime()
 		self:EmitSound( "items/medcharge4.wav" )
 		return
@@ -393,6 +398,12 @@ if CLIENT then
 end
 
 if SERVER then
+	local expMultiConvar = GetConVar( "horde_experience_multiplier" )
+	local startXpMult = HORDE.Difficulty[HORDE.CurrentDifficulty].xpMultiStart
+	local endXpMult = HORDE.Difficulty[HORDE.CurrentDifficulty].xpMultiEnd
+	local endMinusStartXp = endXpMult - startXpMult
+	local maxLevel = HORDE.max_level
+
 	hook.Add( "PlayerDeath", "HordeMedkitRevive", function( ply )
 		local deathPos = ply:GetPos()
 		local trace = util.TraceHull({
@@ -425,6 +436,15 @@ if SERVER then
 
 		owner:Horde_AddMoney( 50 )
 		owner:Horde_SyncEconomy()
+
+		local subclass = owner:Horde_GetCurrentSubclass()
+		if owner:Horde_GetLevel( subclass ) < maxLevel then
+			local wavePercent = HORDE.current_wave / HORDE.max_waves
+			local roundXpMulti = startXpMult + ( wavePercent * endMinusStartXp ) -- This gets the xp multi number between min and max multi based on round
+			local expMulti = roundXpMulti * expMultiConvar:GetInt() / 2
+
+			owner:Horde_GiveExp( subclass, 25 * expMulti, "Reviving a Player" )
+		end
 
 		net.Start( "horde_medkit_player_revived" )
 			net.WriteString( ply:GetName() ) -- Revived player name

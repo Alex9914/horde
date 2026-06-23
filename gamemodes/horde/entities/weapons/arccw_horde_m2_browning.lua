@@ -26,8 +26,8 @@ SWEP.WorldModel = "models/horde/weapons/arccw/w_50cal_12.mdl"
 SWEP.ViewModelFOV = 60
 SWEP.DefaultBodygroups = "0000000"
 
-SWEP.Damage = 100
-SWEP.DamageMin = 80 -- damage done at maximum range
+SWEP.Damage = 130
+SWEP.DamageMin = 110 -- damage done at maximum range
 SWEP.Range = 500 -- in METRES
 SWEP.Penetration = 50
 SWEP.DamageType = DMG_BULLET
@@ -84,10 +84,10 @@ SWEP.ShellScale = 2
 
 SWEP.MuzzleEffectAttachment = 1 -- which attachment to put the muzzle on
 SWEP.CaseEffectAttachment = 2 -- which attachment to put the case effect on
-SWEP.SpeedMult = 0.7
+SWEP.SpeedMult = 0.875
 SWEP.ShootSpeedMult = 0.6
-SWEP.SightedSpeedMult = 0.3
-SWEP.SightTime = 0.55
+SWEP.SightedSpeedMult = 0.35
+SWEP.SightTime = 0.22
 
 SWEP.IronSightStruct = {
     Pos = Vector(-5.902, -10.653, 4.796),
@@ -223,7 +223,7 @@ SWEP.Animations = {
         ShellEjectAt = 0
     },
     ["fire_iron"] = {
-        Source = "cya zoom",
+        Source = "nil",
         Time = .2,
         ShellEjectAt = 0
     },
